@@ -43,9 +43,9 @@ package BinToAsc is
 
    -- Define Alphabet types
 
-   subtype Alphabet_16 is String(1..16);
-   subtype Alphabet_32 is String(1..32);
-   subtype Alphabet_64 is String(1..64);
+   type Alphabet_16 is array (Integer range 0..15) of Character;
+   type Alphabet_32 is array (Integer range 0..31) of Character;
+   type Alphabet_64 is array (Integer range 0..63) of Character;
 
    -- This compile-time check is useful for GNAT, but in GNATprove it currently
    -- just generates a warning that it can not yet be proved correct.

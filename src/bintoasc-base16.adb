@@ -15,8 +15,8 @@ package body BinToAsc.Base16 is
       Input_Index : constant Integer := Bin'Pos(Input) - Bin'Pos(Bin'First);
    begin
       Output_Length := 2;
-      Output := (Alphabet(Input_Index / 16 + 1),
-                 Alphabet(Input_Index mod 16 + 1));
+      Output := (Alphabet(Input_Index / 16),
+                 Alphabet(Input_Index mod 16));
       Output(Output'First + 2 .. Output'Last) := (others => ' ');
    end Process;
 
@@ -33,8 +33,8 @@ package body BinToAsc.Base16 is
       Output_Length := 2 * Input'Length;
       for I in Input'Range loop
          Input_Index := Bin'Pos(Input(I)) - Bin'Pos(Bin'First);
-         Output(Output_Index) := Alphabet(Input_Index / 16 + 1);
-         Output(Output_Index + 1) := Alphabet(Input_Index mod 16 + 1);
+         Output(Output_Index) := Alphabet(Input_Index / 16);
+         Output(Output_Index + 1) := Alphabet(Input_Index mod 16);
          Output_Index := Output_Index + 2;
       end loop;
    end Process;
