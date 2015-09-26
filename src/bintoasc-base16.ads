@@ -12,6 +12,8 @@ package BinToAsc.Base16 is
 
    type Base16_To_String is new Codec_To_String with null record;
 
+   procedure Reset (C : in out Base16_To_String);
+
    function Expansion_Numerator (C : in Base16_To_String)
                                  return Positive is (2);
 

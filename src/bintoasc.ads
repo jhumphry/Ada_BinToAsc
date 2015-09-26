@@ -15,6 +15,10 @@ package BinToAsc is
       State : Codec_State := READY;
    end record;
 
+   procedure Reset (C : in out Codec) is abstract
+     with Post'Class => (C.State = READY);
+   -- Reset a Codec to its initial state
+
    type Codec_To_String is abstract new Codec with null record;
 
    function Expansion_Numerator (C : in Codec_To_String)

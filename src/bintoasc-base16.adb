@@ -5,6 +5,11 @@
 
 package body BinToAsc.Base16 is
 
+   procedure Reset (C : in out Base16_To_String) is
+   begin
+      C.State := Ready;
+   end Reset;
+
    procedure Process
      (C : in out Base16_To_String;
       Input : in Bin;
