@@ -17,28 +17,37 @@ package BinToAsc is
 
    type Codec_To_String is abstract new Codec with null record;
 
-   function Maximum_Expansion (C : in Codec_To_String)
-                               return Positive is abstract;
+   function Expansion_Numerator (C : in Codec_To_String)
+                                 return Positive is abstract;
+
+   function Expansion_Denominator (C : in Codec_To_String)
+                                   return Positive is abstract;
+
+   function Maximum_Padding (C : in Codec_To_String)
+                             return Natural is abstract;
 
    procedure Process (C : in out Codec_To_String;
                       Input : in Bin;
                       Output : out String;
                       Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
-                          Output'Length >= Maximum_Expansion(C));
+                          Output'Length >= Expansion_Numerator(C) /
+                            Expansion_Denominator(C) + Maximum_Padding(C));
 
    procedure Process (C : in out Codec_To_String;
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
-                          Output'Length >= Input'Length * Maximum_Expansion(C));
+                          Output'Length >= (Input'Length * Expansion_Numerator(C))
+                        / Expansion_Denominator(C) + Maximum_Padding(C));
 
    procedure Completed (C : in out Codec_To_String;
                         Output : out String;
                         Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
-                          Output'Length >= Maximum_Expansion(C)),
+                          Output'Length >= Expansion_Numerator(C) /
+                            Expansion_Denominator(C) + Maximum_Padding(C)),
        Post'Class => C.State in Complete | Failed;
 
    -- Define Alphabet types
