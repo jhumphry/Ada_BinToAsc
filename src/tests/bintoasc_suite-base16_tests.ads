@@ -25,5 +25,7 @@ package BinToAsc_Suite.Base16_Tests is
    procedure Set_Up (T : in out Base16_Test);
 
    procedure Check_Test_Vectors (T : in out Test_Cases.Test_Case'Class);
+   procedure Check_Test_Vectors_Incremental (T : in out Test_Cases.Test_Case'Class);
+   procedure Check_Test_Vectors_By_Char (T : in out Test_Cases.Test_Case'Class);
 
 end BinToAsc_Suite.Base16_Tests;
