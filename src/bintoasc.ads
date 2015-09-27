@@ -5,7 +5,7 @@
 
 generic
    type Bin is mod <>;
-   type Bin_Array_Index is (<>);
+   type Bin_Array_Index is range <>;
    type Bin_Array is array (Bin_Array_Index range <>) of Bin;
 package BinToAsc is
 
