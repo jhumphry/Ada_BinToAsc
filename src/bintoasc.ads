@@ -64,7 +64,9 @@ package BinToAsc is
    -- just generates a warning that it can not yet be proved correct.
    pragma Warnings (GNATprove, Off, "Compile_Time_Error");
    pragma Compile_Time_Error ((Bin'Size /= 8 or
-                                (Bin'Pos(Bin'Last)-Bin'Pos(Bin'First))/=255),
+                                Bin'Modulus /= 256 or
+                                  Bin'Last /= 255 or
+                                    Bin'First /= 0),
                               "BinToAsc only works where the binary type" &
                                 "specified is a regular 8-bit byte.");
    pragma Warnings (GNATprove, On, "Compile_Time_Error");

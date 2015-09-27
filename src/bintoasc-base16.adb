@@ -17,7 +17,7 @@ package body BinToAsc.Base16 is
       Output_Length : out Natural)
    is
       pragma Unreferenced (C);
-      Input_Index : constant Integer := Bin'Pos(Input) - Bin'Pos(Bin'First);
+      Input_Index : constant Integer := Bin'Pos(Input);
    begin
       Output_Length := 2;
       Output := (Alphabet(Input_Index / 16),
@@ -37,7 +37,7 @@ package body BinToAsc.Base16 is
    begin
       Output_Length := 2 * Input'Length;
       for I in Input'Range loop
-         Input_Index := Bin'Pos(Input(I)) - Bin'Pos(Bin'First);
+         Input_Index := Bin'Pos(Input(I));
          Output(Output_Index) := Alphabet(Input_Index / 16);
          Output(Output_Index + 1) := Alphabet(Input_Index mod 16);
          Output_Index := Output_Index + 2;
