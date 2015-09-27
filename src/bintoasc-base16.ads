@@ -55,7 +55,7 @@ package BinToAsc.Base16 is
                       Input : in Character;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length = 1;
+     with Post'Class => Output_Length = 0 or Output_Length = 1;
 
    procedure Process (C : in out Base16_To_Bin;
                       Input : in String;
