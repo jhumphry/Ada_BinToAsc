@@ -17,7 +17,7 @@ package body BinToAsc.Base16 is
 
    procedure Reset (C : in out Base16_To_String) is
    begin
-      C.State := Ready;
+      C := (State => Ready);
    end Reset;
 
    procedure Process
@@ -71,9 +71,9 @@ package body BinToAsc.Base16 is
 
    procedure Reset (C : in out Base16_To_Bin) is
    begin
-      C.State := Ready;
-      C.Loaded := False;
-      C.Load := 0;
+      C := (State => Ready,
+            Loaded => False,
+            Load => 0);
    end Reset;
 
    procedure Process (C : in out Base16_To_Bin;
@@ -83,11 +83,10 @@ package body BinToAsc.Base16 is
    is
       Input_Bin : Bin;
    begin
-      if Case_Sensitive then
-         Input_Bin := Reverse_Alphabet(Input);
-      else
-         Input_Bin := Reverse_Alphabet(To_Lower(Input));
-      end if;
+         Input_Bin := Reverse_Alphabet(if Case_Sensitive
+                                       then Input
+                                       else To_Lower(Input)
+                                      );
 
       if Input_Bin = 255 then
          Output_Length := 0;
@@ -118,11 +117,10 @@ package body BinToAsc.Base16 is
    begin
       for Input_Char of Input loop
 
-         if Case_Sensitive then
-            Input_Bin := Reverse_Alphabet(Input_Char);
-         else
-            Input_Bin := Reverse_Alphabet(To_Lower(Input_Char));
-         end if;
+         Input_Bin := Reverse_Alphabet(if Case_Sensitive
+                                       then Input_Char
+                                       else To_Lower(Input_Char)
+                                      );
 
          if Input_Bin = 255 then
             Conversion_Error := True;
