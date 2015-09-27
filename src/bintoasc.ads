@@ -54,6 +54,41 @@ package BinToAsc is
                             Expansion_Denominator(C) + Maximum_Padding(C)),
        Post'Class => C.State in Complete | Failed;
 
+   type Codec_To_Bin is abstract new Codec with null record;
+
+   function Compression_Numerator (C : in Codec_To_Bin)
+                                 return Positive is abstract;
+
+   function Compression_Denominator (C : in Codec_To_Bin)
+                                   return Positive is abstract;
+
+   function Maximum_Padding (C : in Codec_To_Bin)
+                             return Natural is abstract;
+
+   procedure Process (C : in out Codec_To_Bin;
+                      Input : in Character;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index) is abstract
+     with Pre'Class => (C.State = Ready and
+                          Output'Length >= Compression_Numerator(C) /
+                            Compression_Denominator(C) + Maximum_Padding(C));
+
+   procedure Process (C : in out Codec_To_Bin;
+                      Input : in String;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index) is abstract
+     with Pre'Class => (C.State = Ready and
+                          Output'Length >= (Input'Length * Compression_Numerator(C))
+                        / Compression_Denominator(C) + Maximum_Padding(C));
+
+   procedure Completed (C : in out Codec_To_Bin;
+                        Output : out Bin_Array;
+                        Output_Length : out Bin_Array_Index) is abstract
+     with Pre'Class => (C.State = Ready and
+                          Output'Length >= Compression_Numerator(C) /
+                            Compression_Denominator(C) + Maximum_Padding(C)),
+       Post'Class => C.State in Complete | Failed;
+
    -- Define Alphabet types
 
    type Alphabet_16 is array (Integer range 0..15) of Character;

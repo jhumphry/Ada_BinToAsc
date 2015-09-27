@@ -9,6 +9,12 @@ package body BinToAsc.Base16 is
 
    use Ada.Characters.Handling;
 
+   Reverse_Alphabet : array (Character) of Bin;
+
+   --
+   -- Base16_To_String
+   --
+
    procedure Reset (C : in out Base16_To_String) is
    begin
       C.State := Ready;
@@ -59,6 +65,106 @@ package body BinToAsc.Base16 is
       Output_Length := 0;
    end Completed;
 
+   --
+   -- Base16_To_Bin
+   --
+
+   procedure Reset (C : in out Base16_To_Bin) is
+   begin
+      C.State := Ready;
+      C.Loaded := False;
+      C.Load := 0;
+   end Reset;
+
+   procedure Process (C : in out Base16_To_Bin;
+                      Input : in Character;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+   is
+      Input_Bin : Bin;
+   begin
+      if Case_Sensitive then
+         Input_Bin := Reverse_Alphabet(Input);
+      else
+         Input_Bin := Reverse_Alphabet(To_Lower(Input));
+      end if;
+
+      if Input_Bin = 255 then
+         Output_Length := 0;
+         C.State := Failed;
+      else
+         if C.Loaded then
+            Output(Output'First) := Bin(C.Load) * 16 + Input_Bin;
+            Output(Output'First + 1 .. Output'Last) := (others => 0);
+            Output_Length := 1;
+            C.Loaded := False;
+         else
+            Output := (others => 0);
+            Output_Length := 0;
+            C.Loaded := True;
+            C.Load := Input_Bin;
+         end if;
+      end if;
+   end Process;
+
+   procedure Process (C : in out Base16_To_Bin;
+                      Input : in String;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+   is
+      Input_Bin : Bin;
+      Conversion_Error : Boolean := False;
+      Output_Index : Bin_Array_Index := Output'First;
+   begin
+      for Input_Char of Input loop
+
+         if Case_Sensitive then
+            Input_Bin := Reverse_Alphabet(Input_Char);
+         else
+            Input_Bin := Reverse_Alphabet(To_Lower(Input_Char));
+         end if;
+
+         if Input_Bin = 255 then
+            Conversion_Error := True;
+            exit;
+         end if;
+
+         if C.Loaded then
+            Output(Output_Index) := Bin(C.Load) * 16 + Input_Bin;
+            Output_Index := Output_Index + 1;
+            C.Loaded := False;
+         else
+            C.Loaded := True;
+            C.Load := Input_Bin;
+         end if;
+
+      end loop;
+
+      if Conversion_Error then
+         Output := (others => 0);
+         Output_Length := 0;
+         C.State := Failed;
+      else
+         Output(Output_Index .. Output'Last) := (others => 0);
+         Output_Length := Output_Index - Output'First;
+      end if;
+
+   end Process;
+
+   procedure Completed (C : in out Base16_To_Bin;
+                        Output : out Bin_Array;
+                        Output_Length : out Bin_Array_Index)
+   is
+   begin
+      if C.Loaded = False then
+         C.State := Complete;
+      else
+         C.State := Failed;
+      end if;
+      Output := (others => 0);
+      Output_Length := 0;
+   end Completed;
+
 begin
 
    -- The following Compile_Time_Error test is silently ignored by GNAT GPL 2015,
@@ -77,5 +183,23 @@ begin
                                ),
                               "Duplicate letter in alphabet for Base16 codec.");
    pragma Warnings (GNATprove, On, "Compile_Time_Error");
+
+   Reverse_Alphabet := (others => 255);
+
+      for I in Alphabet'Range loop
+         if Case_Sensitive then
+            if Reverse_Alphabet(Alphabet(I)) /= 255 then
+               raise Program_Error with "Duplicate letter '" & Alphabet(I) &
+                 "' in alphabet for Base16 codec.";
+            end if;
+            Reverse_Alphabet(Alphabet(I)) := Half_Bin(I);
+         else
+            if Reverse_Alphabet(To_Lower(Alphabet(I))) /= 255 then
+               raise Program_Error with "Duplicate letter '" & To_Lower(Alphabet(I)) &
+                 "' in alphabet for (case insensitive) Base16 codec.";
+            end if;
+            Reverse_Alphabet(To_Lower(Alphabet(I))) := Half_Bin(I);
+         end if;
+      end loop;
 
 end BinToAsc.Base16;
