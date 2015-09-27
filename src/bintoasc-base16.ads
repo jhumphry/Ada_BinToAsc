@@ -8,8 +8,6 @@ generic
    Case_Sensitive : Boolean := True;
 package BinToAsc.Base16 is
 
-   pragma Unreferenced(Case_Sensitive);
-
    type Base16_To_String is new Codec_To_String with null record;
 
    procedure Reset (C : in out Base16_To_String);
