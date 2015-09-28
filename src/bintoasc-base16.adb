@@ -9,7 +9,8 @@ package body BinToAsc.Base16 is
 
    use Ada.Characters.Handling;
 
-   Reverse_Alphabet : array (Character) of Bin;
+   Reverse_Alphabet : constant Reverse_Alphabet_Lookup
+     := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
 
    --
    -- Base16_To_String
@@ -181,23 +182,5 @@ begin
                                ),
                               "Duplicate letter in alphabet for Base16 codec.");
    pragma Warnings (GNATprove, On, "Compile_Time_Error");
-
-   Reverse_Alphabet := (others => 255);
-
-      for I in Alphabet'Range loop
-         if Case_Sensitive then
-            if Reverse_Alphabet(Alphabet(I)) /= 255 then
-               raise Program_Error with "Duplicate letter '" & Alphabet(I) &
-                 "' in alphabet for Base16 codec.";
-            end if;
-            Reverse_Alphabet(Alphabet(I)) := Half_Bin(I);
-         else
-            if Reverse_Alphabet(To_Lower(Alphabet(I))) /= 255 then
-               raise Program_Error with "Duplicate letter '" & To_Lower(Alphabet(I)) &
-                 "' in alphabet for (case insensitive) Base16 codec.";
-            end if;
-            Reverse_Alphabet(To_Lower(Alphabet(I))) := Half_Bin(I);
-         end if;
-      end loop;
 
 end BinToAsc.Base16;
