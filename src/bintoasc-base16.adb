@@ -31,9 +31,9 @@ package body BinToAsc.Base16 is
       Input_Index : constant Integer := Bin'Pos(Input);
    begin
       Output_Length := 2;
-      Output(Output'First .. Output'First + 1) := (Alphabet(Input_Index / 16),
-                                                   Alphabet(Input_Index mod 16));
-      Output(Output'First + 2 .. Output'Last) := (others => ' ');
+      Output := (Alphabet(Input_Index / 16),
+                 Alphabet(Input_Index mod 16),
+                 others => ' ');
    end Process;
 
    procedure Process
