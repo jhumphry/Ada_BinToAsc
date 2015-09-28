@@ -116,11 +116,11 @@ package body BinToAsc.Base16 is
       Conversion_Error : Boolean := False;
       Output_Index : Bin_Array_Index := Output'First;
    begin
-      for Input_Char of Input loop
+      for I in Input'Range loop
 
          Input_Bin := Reverse_Alphabet(if Case_Sensitive
-                                       then Input_Char
-                                       else To_Lower(Input_Char)
+                                       then Input(I)
+                                       else To_Lower(Input(I))
                                       );
 
          if Input_Bin = 255 then
