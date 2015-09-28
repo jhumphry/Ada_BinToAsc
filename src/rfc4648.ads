@@ -4,7 +4,8 @@
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
 with System.Storage_Elements;
-with BinToAsc, BinToAsc.Base16;
+with BinToAsc, BinToAsc.Base16, BinToAsc.Base64;
+
 
 package RFC4648 is
 
@@ -18,5 +19,7 @@ package RFC4648 is
    function Failed return BToA.Codec_State renames BToA.Failed;
 
    package Base16 is new BToA.Base16; -- default generic parameters are suitable
+
+   package Base64 is new BToA.Base64; -- default generic parameters are suitable
 
 end RFC4648;

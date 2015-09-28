@@ -21,6 +21,8 @@ procedure BinToAsc_Example is
    Base16_Coding : Base16.Base16_To_String;
    Base16_Decoding : Base16.Base16_To_Bin;
 
+   Base64_Coding : Base64.Base64_To_String;
+
    Result_String : String(1..16);
    Result_String_Length : Natural;
    Result_Bin : System.Storage_Elements.Storage_Array(1..16);
@@ -66,5 +68,35 @@ begin
                     Output_Length => Result_Bin_Length);
    pragma Assert(Result_Bin_Length = 0, "Base16 decoder producing unexpected output.");
    pragma Assert(Base16_Decoding.State = Complete, "Base16 decoder not terminated cleanly.");
+
+   -- Demonstrate coding into BASE64
+   Put_Line("According to RFC4648 BASE64('foobar') = 'Zm9vYmFy'");
+   Put("According to this package BASE16('foobar') = '");
+   Base64.Process(C => Base64_Coding,
+                  Input => String_To_Storage_Array("foobar"),
+                  Output => Result_String,
+                  Output_Length => Result_String_Length);
+   Put(Result_String(1..Result_String_Length));
+   Base64.Completed(C => Base64_Coding,
+                  Output => Result_String,
+                  Output_Length => Result_String_Length);
+   Put(Result_String(1..Result_String_Length));
+   Put_Line("'");
+   New_Line;
+
+   Base64.Reset(C => Base64_Coding);
+   Put_Line("According to RFC4648 BASE64('foob') = 'Zm9vYg=='");
+   Put("According to this package BASE16('foob') = '");
+   Base64.Process(C => Base64_Coding,
+                  Input => String_To_Storage_Array("foob"),
+                  Output => Result_String,
+                  Output_Length => Result_String_Length);
+   Put(Result_String(1..Result_String_Length));
+   Base64.Completed(C => Base64_Coding,
+                  Output => Result_String,
+                  Output_Length => Result_String_Length);
+   Put(Result_String(1..Result_String_Length));
+   Put_Line("'");
+   New_Line;
 
 end BinToAsc_Example;
