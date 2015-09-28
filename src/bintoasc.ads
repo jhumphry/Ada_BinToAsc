@@ -91,11 +91,12 @@ package BinToAsc is
 
    -- Define Alphabet types
 
-   type Alphabet is array (Natural range <>) of Character;
+   subtype Alphabet_Index is Integer range 0..254;
+   type Alphabet is array (Alphabet_Index range <>) of Character;
 
    function Valid_Alphabet (A : in Alphabet;
                             Case_Sensitive : in Boolean) return Boolean
-        with Pre => (A'Length <= 255 and A'First = 0);
+        with Pre => (A'First = 0);
 
    subtype Alphabet_16 is Alphabet(0..15);
    subtype Alphabet_32 is Alphabet(0..31);
@@ -106,7 +107,7 @@ package BinToAsc is
    function Make_Reverse_Alphabet (A : in Alphabet;
                                    Case_Sensitive : in Boolean)
                                    return Reverse_Alphabet_Lookup
-     with Pre => (A'Length <= 255 and Valid_Alphabet(A, Case_Sensitive));
+     with Pre => (Valid_Alphabet(A, Case_Sensitive));
 
    -- This compile-time check is useful for GNAT, but in GNATprove it currently
    -- just generates a warning that it can not yet be proved correct.
