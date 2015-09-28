@@ -31,7 +31,7 @@ package BinToAsc.Base16 is
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post'Class => Output_Length = 2 * Input'Length;
+     with Post'Class => Output_Length / 2 = Input'Length;
 
    procedure Completed (C : in out Base16_To_String;
                         Output : out String;
