@@ -10,7 +10,7 @@ package BinToAsc.Base16 is
 
    type Base16_To_String is new Codec_To_String with null record;
 
-   procedure Reset (C : in out Base16_To_String);
+   procedure Reset (C : out Base16_To_String);
 
    function Expansion_Numerator (C : in Base16_To_String)
                                  return Positive is (2);
@@ -40,7 +40,7 @@ package BinToAsc.Base16 is
 
    type Base16_To_Bin is new Codec_To_Bin with private;
 
-   procedure Reset (C : in out Base16_To_Bin);
+   procedure Reset (C : out Base16_To_Bin);
 
    function Compression_Numerator (C : in Base16_To_Bin)
                                  return Positive is (1);

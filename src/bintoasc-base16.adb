@@ -16,7 +16,7 @@ package body BinToAsc.Base16 is
    -- Base16_To_String
    --
 
-   procedure Reset (C : in out Base16_To_String) is
+   procedure Reset (C : out Base16_To_String) is
    begin
       C := (State => Ready);
    end Reset;
@@ -70,7 +70,7 @@ package body BinToAsc.Base16 is
    -- Base16_To_Bin
    --
 
-   procedure Reset (C : in out Base16_To_Bin) is
+   procedure Reset (C : out Base16_To_Bin) is
    begin
       C := (State => Ready,
             Loaded => False,
