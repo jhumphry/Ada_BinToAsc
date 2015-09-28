@@ -31,6 +31,8 @@ package body BinToAsc_Suite.Utils is
 
       Result_String : String(1..Max_Buffer_Length);
       Result_String_Length : Integer;
+      Result_Tail_Length : Integer;
+      Result_Total_Length : Integer;
 
    begin
       for T of Test_Vectors loop
@@ -39,20 +41,25 @@ package body BinToAsc_Suite.Utils is
             Encoded : constant String := To_String(T.Encoded);
          begin
             BinToAsc_Encoder.Reset;
+
             BinToAsc_Encoder.Process(Input => STSA(Unencoded),
                                      Output => Result_String,
                                      Output_Length => Result_String_Length);
-            Assert(Result_String(1..Result_String_Length) = Encoded,
+
+            BinToAsc_Encoder.Completed(Output => Result_String(Result_String_Length + 1 .. Result_String'Last),
+                                       Output_Length => Result_Tail_Length);
+
+            Result_Total_Length := Result_String_Length + Result_Tail_Length;
+
+            Assert(Result_String(1..Result_Total_Length) = Encoded,
                    "BinToAsc encoder on: " &
                      Unencoded &
                      " gives wrong result: " &
-                     Result_String(1..Result_String_Length) &
+                     Result_String(1..Result_Total_Length) &
                      " instead of: " &
                      Encoded);
 
-            BinToAsc_Encoder.Completed(Output => Result_String,
-                                     Output_Length => Result_String_Length);
-            Assert(Result_String_Length = 0 and BinToAsc_Encoder.State = Complete,
+            Assert( BinToAsc_Encoder.State = Complete,
                    "BinToAsc encoder not terminating correctly.");
          end;
       end loop;
@@ -69,6 +76,8 @@ package body BinToAsc_Suite.Utils is
 
       Result_Bin : Storage_Array(1..Storage_Offset(Max_Buffer_Length));
       Result_Bin_Length : Storage_Offset;
+      Result_Tail_Length : Storage_Offset;
+      Result_Total_Length : Storage_Offset;
 
    begin
       for T of Test_Vectors loop
@@ -77,20 +86,25 @@ package body BinToAsc_Suite.Utils is
             Encoded : constant String := To_String(T.Encoded);
          begin
             BinToAsc_Decoder.Reset;
+
             BinToAsc_Decoder.Process(Input => Encoded,
-                                   Output => Result_Bin,
-                                   Output_Length => Result_Bin_Length);
-            Assert(SATS(Result_Bin(1..Result_Bin_Length)) = Unencoded,
+                                     Output => Result_Bin,
+                                     Output_Length => Result_Bin_Length);
+
+            BinToAsc_Decoder.Completed(Output => Result_Bin(Result_Bin_Length + 1 .. Result_Bin'Last),
+                                       Output_Length => Result_Tail_Length);
+
+            Result_Total_Length := Result_Bin_Length + Result_Tail_Length;
+
+            Assert(SATS(Result_Bin(1..Result_Total_Length)) = Unencoded,
                    "BinToAsc decoder on: " &
                      Encoded &
                      " gives wrong result: " &
-                     SATS(Result_Bin(1..Result_Bin_Length)) &
+                     SATS(Result_Bin(1..Result_Total_Length)) &
                      " instead of: " &
                      Unencoded);
 
-            BinToAsc_Decoder.Completed(Output => Result_Bin,
-                                     Output_Length => Result_Bin_Length);
-            Assert(Result_Bin_Length = 0 and BinToAsc_Decoder.State = Complete,
+            Assert(BinToAsc_Decoder.State = Complete,
                    "BinToAsc decoder not terminating correctly.");
          end;
       end loop;
