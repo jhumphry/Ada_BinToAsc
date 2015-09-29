@@ -46,6 +46,9 @@ package body BinToAsc_Suite.Utils is
                                      Output => Result_String,
                                      Output_Length => Result_String_Length);
 
+            Assert( BinToAsc_Encoder.State = Ready,
+                   "BinToAsc encoder failing during coversion.");
+
             BinToAsc_Encoder.Completed(Output => Result_String(Result_String_Length + 1 .. Result_String'Last),
                                        Output_Length => Result_Tail_Length);
 
@@ -90,6 +93,9 @@ package body BinToAsc_Suite.Utils is
             BinToAsc_Decoder.Process(Input => Encoded,
                                      Output => Result_Bin,
                                      Output_Length => Result_Bin_Length);
+
+            Assert(BinToAsc_Decoder.State = Ready,
+                   "BinToAsc decoder failing during coversion.");
 
             BinToAsc_Decoder.Completed(Output => Result_Bin(Result_Bin_Length + 1 .. Result_Bin'Last),
                                        Output_Length => Result_Tail_Length);
