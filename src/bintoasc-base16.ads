@@ -12,62 +12,54 @@ package BinToAsc.Base16 is
 
    procedure Reset (C : out Base16_To_String);
 
-   function Expansion_Numerator (C : in Base16_To_String)
-                                 return Positive is (2);
+   function Input_Group_Size (C : in Base16_To_String) return Positive is (1);
 
-   function Expansion_Denominator (C : in Base16_To_String)
-                                   return Positive is (1);
-
-   function Maximum_Padding (C : in Base16_To_String)
-                             return Natural is (0);
+   function Output_Group_Size (C : in Base16_To_String) return Positive is (2);
 
    procedure Process (C : in out Base16_To_String;
                       Input : in Bin;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post'Class => Output_Length = 2;
+     with Post => (Output_Length = 2);
 
    procedure Process (C : in out Base16_To_String;
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post'Class => Output_Length / 2 = Input'Length;
+     with Post => (Output_Length / 2 = Input'Length and
+                     Output_Length mod 2 = 0);
 
    procedure Completed (C : in out Base16_To_String;
                         Output : out String;
                         Output_Length : out Natural)
-     with Post'Class => Output_Length = 0;
+     with Post => (Output_Length = 0 or Output_Length = 2);
 
    type Base16_To_Bin is new Codec_To_Bin with private;
 
    procedure Reset (C : out Base16_To_Bin);
 
-   function Compression_Numerator (C : in Base16_To_Bin)
-                                 return Positive is (1);
+   function Input_Group_Size (C : in Base16_To_Bin) return Positive is (2);
 
-   function Compression_Denominator (C : in Base16_To_Bin)
-                                   return Positive is (2);
-
-   function Maximum_Padding (C : in Base16_To_Bin)
-                             return Natural is (1);
+   function Output_Group_Size (C : in Base16_To_Bin) return Positive is (1);
 
    procedure Process (C : in out Base16_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length = 0 or Output_Length = 1;
+     with Post => (Output_Length = 0 or Output_Length = 1);
 
    procedure Process (C : in out Base16_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length >= Input'Length / 2 and
-     Output_Length <= Input'Length / 2 + 1;
+     with Post => (Output_Length = Input'Length / 2 or
+                     Output_Length = Input'Length / 2 + 1 or
+                       C.State = Failed);
 
    procedure Completed (C : in out Base16_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length = 0;
+     with Post => (Output_Length = 0);
 
 private
 

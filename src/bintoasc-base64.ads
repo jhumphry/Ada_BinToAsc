@@ -12,64 +12,60 @@ package BinToAsc.Base64 is
 
    procedure Reset (C : out Base64_To_String);
 
-   function Expansion_Numerator (C : in Base64_To_String)
-                                 return Positive is (4);
+   function Input_Group_Size (C : in Base64_To_String) return Positive is (3);
 
-   function Expansion_Denominator (C : in Base64_To_String)
-                                   return Positive is (3);
-
-   function Maximum_Padding (C : in Base64_To_String)
-                             return Natural is (3);
+   function Output_Group_Size (C : in Base64_To_String) return Positive is (4);
 
    procedure Process (C : in out Base64_To_String;
                       Input : in Bin;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post'Class => (Output_Length = 0 or Output_Length = 4);
+     with Post => (Output_Length = 0 or Output_Length = 4);
 
    procedure Process (C : in out Base64_To_String;
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post'Class => (Output_Length / Expansion_Numerator(C) =
-                             Input'Length / Expansion_Denominator(C) or
-                        Output_Length / Expansion_Numerator(C) =
-                             Input'Length / Expansion_Denominator(C) + 1);
+     with Post => (Output_Length / 4 = Input'Length / 3 or
+                     Output_Length / 4 = Input'Length / 3 + 1);
 
    procedure Completed (C : in out Base64_To_String;
                         Output : out String;
                         Output_Length : out Natural)
-     with Post'Class => (Output_Length = 0 or Output_Length = 4);
+     with Post => (Output_Length = 0 or Output_Length = 4);
 
    type Base64_To_Bin is new Codec_To_Bin with private;
 
    procedure Reset (C : out Base64_To_Bin);
 
-   function Compression_Numerator (C : in Base64_To_Bin)
-                                 return Positive is (3);
+   function Input_Group_Size (C : in Base64_To_Bin) return Positive is (4);
 
-   function Compression_Denominator (C : in Base64_To_Bin)
-                                   return Positive is (4);
-
-   function Maximum_Padding (C : in Base64_To_Bin)
-                             return Natural is (3);
+   function Output_Group_Size (C : in Base64_To_Bin) return Positive is (3);
 
    procedure Process (C : in out Base64_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length >= 0 and Output_Length <= 3;
+     with Post => (Output_Length >= 0 and Output_Length <= 3);
 
    procedure Process (C : in out Base64_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length / 3 <= Input'Length / 4 + 1;
+     with Post => ((Output_Length / 3 >= Input'Length / 4 - 1 and
+                       Output_Length / 3 <= Input'Length / 4 + 1) or
+                         C.State = Failed);
+
+   -- Re: the postcondition. If the input is a given number four character
+   -- groups but with the last containing padding, the output may be less than
+   -- that number of three character groups. As usual, if the codec contained
+   -- some partially decoded data, the number of output groups can be one more
+   -- than otherwise expected.
 
    procedure Completed (C : in out Base64_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
-     with Post'Class => Output_Length = 0;
+     with Post => (Output_Length = 0);
 
 private
 
