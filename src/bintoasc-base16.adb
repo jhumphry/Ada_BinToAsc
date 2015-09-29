@@ -89,7 +89,7 @@ package body BinToAsc.Base16 is
                                        else To_Lower(Input)
                                       );
 
-      if Input_Bin = 255 then
+      if Input_Bin = Invalid_Character_Input then
          Output_Length := 0;
          C.State := Failed;
       else
@@ -122,7 +122,7 @@ package body BinToAsc.Base16 is
                                        else To_Lower(Input(I))
                                       );
 
-         if Input_Bin = 255 then
+         if Input_Bin = Invalid_Character_Input then
             C.State := Failed;
             exit;
          end if;

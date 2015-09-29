@@ -102,7 +102,13 @@ package BinToAsc is
    subtype Alphabet_32 is Alphabet(0..31);
    subtype Alphabet_64 is Alphabet(0..63);
 
+ private
+
    type Reverse_Alphabet_Lookup is array (Character) of Bin;
+
+   Invalid_Character_Input : constant Bin := 255;
+   -- Any useful BinToAsc codec cannot map all Bin values to a Character value
+   -- else there would be no benefit over simply using the Bin data directly.
 
    function Make_Reverse_Alphabet (A : in Alphabet;
                                    Case_Sensitive : in Boolean)

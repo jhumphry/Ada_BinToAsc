@@ -131,7 +131,7 @@ package body BinToAsc.Base64 is
          C.State := Failed;
       else
          Input_Bin := Reverse_Alphabet(Input);
-         if Input_Bin = 255 then
+         if Input_Bin = Invalid_Character_Input then
             C.State := Failed;
          end if;
       end if;
@@ -181,7 +181,7 @@ package body BinToAsc.Base64 is
             exit;
          else
             Input_Bin := Reverse_Alphabet(Input(I));
-            if Input_Bin = 255 then
+            if Input_Bin = Invalid_Character_Input then
                C.State := Failed;
                exit;
             end if;

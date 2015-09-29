@@ -31,7 +31,7 @@ package body BinToAsc is
       -- The precondition on Valid_Alphabet ensures that the input A does not
       -- contain any duplicate characters.
       return R : Reverse_Alphabet_Lookup do
-         R := (others => 255);
+         R := (others => Invalid_Character_Input);
          for I in A'Range loop
             if Case_Sensitive then
                R(A(I)) := Bin(I mod Bin'Modulus);
