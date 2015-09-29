@@ -113,7 +113,6 @@ package body BinToAsc.Base16 is
                       Output_Length : out Bin_Array_Index)
    is
       Input_Bin : Bin;
-      Conversion_Error : Boolean := False;
       Output_Index : Bin_Array_Index := Output'First;
    begin
       for I in Input'Range loop
@@ -124,7 +123,7 @@ package body BinToAsc.Base16 is
                                       );
 
          if Input_Bin = 255 then
-            Conversion_Error := True;
+            C.State := Failed;
             exit;
          end if;
 
@@ -139,10 +138,9 @@ package body BinToAsc.Base16 is
 
       end loop;
 
-      if Conversion_Error then
+      if C.State = Failed then
          Output := (others => 0);
          Output_Length := 0;
-         C.State := Failed;
       else
          Output(Output_Index .. Output'Last) := (others => 0);
          Output_Length := Output_Index - Output'First;
