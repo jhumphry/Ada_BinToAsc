@@ -18,16 +18,16 @@ package body BinToAsc_Suite.Base64_Tests is
 
       Register_Routine (T, Check_Test_Vectors_To_String'Access,
                         "Check test vectors from RFC4648, binary -> string");
---        Register_Routine (T, Check_Test_Vectors_To_Bin'Access,
---                          "Check test vectors from RFC4648, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_To_Bin'Access,
+                        "Check test vectors from RFC4648, string -> binary");
       Register_Routine (T, Check_Test_Vectors_Incremental_To_String'Access,
                         "Check test vectors from RFC4648, incrementally, binary -> string");
---        Register_Routine (T, Check_Test_Vectors_Incremental_To_Bin'Access,
---                          "Check test vectors from RFC4648, incrementally, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_Incremental_To_Bin'Access,
+                        "Check test vectors from RFC4648, incrementally, string -> binary");
       Register_Routine (T, Check_Test_Vectors_By_Char_To_String'Access,
                         "Check test vectors from RFC4648, character-by-character, binary -> string");
---        Register_Routine (T, Check_Test_Vectors_By_Char_To_Bin'Access,
---                          "Check test vectors from RFC4648, character-by-character, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_By_Char_To_Bin'Access,
+                        "Check test vectors from RFC4648, character-by-character, string -> binary");
    end Register_Tests;
 
    ----------

@@ -41,46 +41,55 @@ package BinToAsc.Base64 is
                         Output_Length : out Natural)
      with Post'Class => (Output_Length = 0 or Output_Length = 4);
 
---     type Base64_To_Bin is new Codec_To_Bin with private;
---
---     procedure Reset (C : out Base64_To_Bin);
---
---     function Compression_Numerator (C : in Base64_To_Bin)
---                                   return Positive is (1);
---
---     function Compression_Denominator (C : in Base64_To_Bin)
---                                     return Positive is (2);
---
---     function Maximum_Padding (C : in Base64_To_Bin)
---                               return Natural is (1);
---
---     procedure Process (C : in out Base64_To_Bin;
---                        Input : in Character;
---                        Output : out Bin_Array;
---                        Output_Length : out Bin_Array_Index)
---       with Post'Class => Output_Length = 0 or Output_Length = 1;
---
---     procedure Process (C : in out Base64_To_Bin;
---                        Input : in String;
---                        Output : out Bin_Array;
---                        Output_Length : out Bin_Array_Index)
---       with Post'Class => Output_Length >= Input'Length / 2 and
---       Output_Length <= Input'Length / 2 + 1;
---
---     procedure Completed (C : in out Base64_To_Bin;
---                          Output : out Bin_Array;
---                          Output_Length : out Bin_Array_Index)
---       with Post'Class => Output_Length = 0;
+   type Base64_To_Bin is new Codec_To_Bin with private;
+
+   procedure Reset (C : out Base64_To_Bin);
+
+   function Compression_Numerator (C : in Base64_To_Bin)
+                                 return Positive is (3);
+
+   function Compression_Denominator (C : in Base64_To_Bin)
+                                   return Positive is (4);
+
+   function Maximum_Padding (C : in Base64_To_Bin)
+                             return Natural is (3);
+
+   procedure Process (C : in out Base64_To_Bin;
+                      Input : in Character;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+     with Post'Class => Output_Length >= 0 and Output_Length <= 3;
+
+   procedure Process (C : in out Base64_To_Bin;
+                      Input : in String;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+     with Post'Class => Output_Length / 3 <= Input'Length / 4 + 1;
+
+   procedure Completed (C : in out Base64_To_Bin;
+                        Output : out Bin_Array;
+                        Output_Length : out Bin_Array_Index)
+     with Post'Class => Output_Length = 0;
 
 private
 
-   type Base64_Index is range 0..2;
-   type Base64_Buffer is array (Base64_Index) of Bin;
+   type Base64_Bin_Index is range 0..2;
+   type Base64_Bin_Buffer is array (Base64_Bin_Index) of Bin;
 
    type Base64_To_String is new Codec_To_String with
       record
-         Next_Index : Base64_Index := 0;
-         Buffer : Base64_Buffer := (others => 0);
+         Next_Index : Base64_Bin_Index := 0;
+         Buffer : Base64_Bin_Buffer := (others => 0);
+      end record;
+
+   type Base64_Reverse_Index is range 0..3;
+   type Base64_Reverse_Buffer is array (Base64_Reverse_Index) of Bin;
+
+   type Base64_To_Bin is new Codec_To_Bin with
+      record
+         Next_Index : Base64_Reverse_Index := 0;
+         Buffer : Base64_Reverse_Buffer := (others => 0);
+         Padding_Length : Bin_Array_Index := 0;
       end record;
 
 end BinToAsc.Base64;

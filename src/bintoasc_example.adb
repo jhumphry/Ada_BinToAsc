@@ -22,6 +22,7 @@ procedure BinToAsc_Example is
    Base16_Decoding : Base16.Base16_To_Bin;
 
    Base64_Coding : Base64.Base64_To_String;
+   Base64_Decoding : Base64.Base64_To_Bin;
 
    Result_String : String(1..16);
    Result_String_Length : Natural;
@@ -96,6 +97,21 @@ begin
                   Output => Result_String,
                   Output_Length => Result_String_Length);
    Put(Result_String(1..Result_String_Length));
+   Put_Line("'");
+   New_Line;
+
+   Base64.Reset(C => Base64_Decoding);
+   Put_Line("According to RFC4648 BASE64^{-1}('Zm8=') = 'fo'");
+   Put("According to this package BASE64^{-1}('Zm8=') = '");
+   Base64.Process(C => Base64_Decoding,
+                  Input => "Zm8=",
+                  Output => Result_Bin,
+                  Output_Length => Result_Bin_Length);
+   Put(Storage_Array_To_String(Result_Bin(1..Result_Bin_Length)));
+   Base64.Completed(C => Base64_Decoding,
+                  Output => Result_Bin,
+                  Output_Length => Result_Bin_Length);
+   Put(Storage_Array_To_String(Result_Bin(1..Result_Bin_Length)));
    Put_Line("'");
    New_Line;
 

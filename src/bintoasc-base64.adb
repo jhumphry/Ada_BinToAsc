@@ -7,7 +7,6 @@ package body BinToAsc.Base64 is
 
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
      := Make_Reverse_Alphabet(Alphabet, True);
-   pragma Unreferenced (Reverse_Alphabet);
 
    --
    -- Base64_To_String
@@ -102,99 +101,130 @@ package body BinToAsc.Base64 is
    -- Base64_To_Bin
    --
 
---     procedure Reset (C : out Base64_To_Bin) is
---     begin
---        C := (State => Ready,
---              Loaded => False,
---              Load => 0);
---     end Reset;
---
---     procedure Process (C : in out Base64_To_Bin;
---                        Input : in Character;
---                        Output : out Bin_Array;
---                        Output_Length : out Bin_Array_Index)
---     is
---        Input_Bin : Bin;
---     begin
---           Input_Bin := Reverse_Alphabet(if Case_Sensitive
---                                         then Input
---                                         else To_Lower(Input)
---                                        );
---
---        if Input_Bin = 255 then
---           Output_Length := 0;
---           C.State := Failed;
---        else
---           if C.Loaded then
---              Output(Output'First) := Bin(C.Load) * 16 + Input_Bin;
---              Output(Output'First + 1 .. Output'Last) := (others => 0);
---              Output_Length := 1;
---              C.Loaded := False;
---           else
---              Output := (others => 0);
---              Output_Length := 0;
---              C.Loaded := True;
---              C.Load := Input_Bin;
---           end if;
---        end if;
---     end Process;
---
---     procedure Process (C : in out Base64_To_Bin;
---                        Input : in String;
---                        Output : out Bin_Array;
---                        Output_Length : out Bin_Array_Index)
---     is
---        Input_Bin : Bin;
---        Conversion_Error : Boolean := False;
---        Output_Index : Bin_Array_Index := Output'First;
---     begin
---        for I in Input'Range loop
---
---           Input_Bin := Reverse_Alphabet(if Case_Sensitive
---                                         then Input(I)
---                                         else To_Lower(Input(I))
---                                        );
---
---           if Input_Bin = 255 then
---              Conversion_Error := True;
---              exit;
---           end if;
---
---           if C.Loaded then
---              Output(Output_Index) := Bin(C.Load) * 16 + Input_Bin;
---              Output_Index := Output_Index + 1;
---              C.Loaded := False;
---           else
---              C.Loaded := True;
---              C.Load := Input_Bin;
---           end if;
---
---        end loop;
---
---        if Conversion_Error then
---           Output := (others => 0);
---           Output_Length := 0;
---           C.State := Failed;
---        else
---           Output(Output_Index .. Output'Last) := (others => 0);
---           Output_Length := Output_Index - Output'First;
---        end if;
---
---     end Process;
---
---     procedure Completed (C : in out Base64_To_Bin;
---                          Output : out Bin_Array;
---                          Output_Length : out Bin_Array_Index)
---     is
---     begin
---        if C.Loaded = False then
---           C.State := Complete;
---        else
---           C.State := Failed;
---        end if;
---        Output := (others => 0);
---        Output_Length := 0;
---     end Completed;
+   procedure Reset (C : out Base64_To_Bin) is
+   begin
+      C := (State => Ready,
+            Next_Index => 0,
+            Buffer => (others => 0),
+            Padding_Length => 0);
+   end Reset;
+
+   procedure Process (C : in out Base64_To_Bin;
+                      Input : in Character;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+   is
+      Input_Bin : Bin;
+   begin
+
+      if Input = Padding then
+         Input_Bin := 0;
+         C.Padding_Length := C.Padding_Length + 1;
+         if C.Padding_Length > 2 then
+            -- No reason to ever have more than two padding characters in Base64
+            -- input
+            C.State := Failed;
+         end if;
+      elsif C.Padding_Length > 0 then
+         -- After the first padding character, only a second padding character
+         -- can be valid
+         C.State := Failed;
+      else
+         Input_Bin := Reverse_Alphabet(Input);
+         if Input_Bin = 255 then
+            C.State := Failed;
+         end if;
+      end if;
+
+      if not (C.State = Failed) then
+         C.Buffer(C.Next_Index) := Input_Bin;
+
+         if C.Next_Index /= 3 then
+            Output := (others => 0);
+            Output_Length := 0;
+            C.Next_Index := C.Next_Index + 1;
+         else
+            C.Next_Index := 0;
+            Output := ( C.Buffer(0) * 4 + C.Buffer(1) / 16,
+                        (C.Buffer(1) mod 16) * 16 + C.Buffer(2) / 4,
+                        (C.Buffer(2) mod 4) * 64 + C.Buffer(3),
+                        others => 0);
+            Output_Length := 3 - C.Padding_Length;
+         end if;
+
+      end if;
+   end Process;
+
+   procedure Process (C : in out Base64_To_Bin;
+                      Input : in String;
+                      Output : out Bin_Array;
+                      Output_Length : out Bin_Array_Index)
+   is
+      Input_Bin : Bin;
+      Output_Index : Bin_Array_Index := Output'First;
+   begin
+      for I in Input'Range loop
+
+         if Input(I) = Padding then
+            Input_Bin := 0;
+            C.Padding_Length := C.Padding_Length + 1;
+            if C.Padding_Length > 2 then
+               -- No reason to ever have more than two padding characters in
+               -- Base64 input
+               C.State := Failed;
+               exit;
+            end if;
+         elsif C.Padding_Length > 0 then
+            -- After the first padding character, only a second padding
+            -- character can be valid
+            C.State := Failed;
+            exit;
+         else
+            Input_Bin := Reverse_Alphabet(Input(I));
+            if Input_Bin = 255 then
+               C.State := Failed;
+               exit;
+            end if;
+         end if;
+
+         C.Buffer(C.Next_Index) := Input_Bin;
+
+         if C.Next_Index /= 3 then
+            C.Next_Index := C.Next_Index + 1;
+         else
+            C.Next_Index := 0;
+            Output(Output_Index .. Output_Index + 2) :=
+              ( C.Buffer(0) * 4 + C.Buffer(1) / 16,
+                (C.Buffer(1) mod 16) * 16 + C.Buffer(2) / 4,
+                (C.Buffer(2) mod 4) * 64 + C.Buffer(3));
+            Output_Index := Output_Index + 3;
+         end if;
+
+      end loop;
+
+      if C.State = Failed then
+         Output := (others => 0);
+         Output_Length := 0;
+      else
+         Output(Output_Index .. Output'Last) := (others => 0);
+         Output_Length := Output_Index - Output'First - C.Padding_Length;
+      end if;
+
+   end Process;
+
+   procedure Completed (C : in out Base64_To_Bin;
+                        Output : out Bin_Array;
+                        Output_Length : out Bin_Array_Index)
+   is
+   begin
+      if C.Next_Index /= 0 then
+         C.State := Failed;
+      else
+         C.State := Complete;
+      end if;
+      Output := (others => 0);
+      Output_Length := 0;
+   end Completed;
 
 begin
 
