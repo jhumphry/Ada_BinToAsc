@@ -28,6 +28,11 @@ package RFC4648 is
    package Base64 is new BToA.Base64(Alphabet => Base64_Alphabet,
                                      Padding  => '=');
 
+   Base64_URL_Safe_Alphabet : constant BToA.Alphabet_64 :=
+     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
+   package Base64_URL_Safe is new BToA.Base64(Alphabet =>
+                                                 Base64_URL_Safe_Alphabet,
+                                              Padding  => '=');
 
 end RFC4648;
