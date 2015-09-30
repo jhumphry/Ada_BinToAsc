@@ -59,4 +59,8 @@ package BinToAsc_Suite.Base64_Tests is
 
    procedure Check_Padding (T : in out Test_Cases.Test_Case'Class);
 
+   procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
+
+   procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Base64_Tests;
