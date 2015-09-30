@@ -59,4 +59,6 @@ package BinToAsc_Suite.Base64_Tests is
                                                                 Codec_To_Bin => RFC4648.Base64.Base64_To_Bin,
                                                                 Max_Buffer_Length => 20);
 
+   procedure Check_Padding (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Base64_Tests;

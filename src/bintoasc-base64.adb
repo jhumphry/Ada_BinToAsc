@@ -151,7 +151,9 @@ package body BinToAsc.Base64 is
                         others => 0);
             Output_Length := 3 - C.Padding_Length;
          end if;
-
+      else
+         Output := (others => 0);
+         Output_Length := 0;
       end if;
    end Process;
 
