@@ -1,0 +1,29 @@
+-- Ada_BinToAsc
+-- An Ada 2012 implementation of various binary-to-ASCII codecs
+
+-- This project file will not rebuild the library
+
+project Ada_BinToAsc_External is
+
+   type Mode_Type is ("debug", "optimize", "coverage");
+   Mode : Mode_Type := external ("mode", "debug");
+
+   for Languages use ("Ada");
+
+   for Library_Name use "ada_bintoasc";
+   for Library_Kind use "static";
+
+   for Library_Interface use ("BinToAsc",
+                              "BinToAsc.Base16",
+                              "BinToAsc.Base64",
+                              "RFC4648"
+                             );
+
+   for Object_Dir use "build/";
+   for Library_Dir use "lib/";
+
+   Main_Source_Dirs := ("src/");
+
+   for Externally_Built use "true";
+
+end Ada_BinToAsc_External;

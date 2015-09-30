@@ -1,0 +1,57 @@
+-- Ada_BinToAsc
+-- Unit tests and example usage for an Ada 2012 implementation of
+-- various binary-to-ASCII codecs
+
+with "aunit";
+with "ada_bintoasc";
+
+project Ada_BinToAsc_Tests is
+
+   type Mode_Type is ("debug", "optimize", "coverage");
+   Mode : Mode_Type := external ("mode", "debug");
+
+   for Source_Dirs use ("src/tests", "src/utils", "src/examples");
+   for Object_Dir use "build/";
+   for Exec_Dir use "exec/";
+   for Main use ("bintoasc_example.adb", "bintoasc_tests.adb");
+
+   package Ide is
+      for Vcs_Kind use "Git";
+      for Documentation_Dir use "doc/";
+   end Ide;
+
+   -- Note: -gnateV would be a nice addition but it chokes on AUnit so has been
+   -- omitted for now
+
+   Debug_Compiler_Switches := ("-fstack-check", "-g", "-gnat2012", "-gnata",
+                               "-gnatf", "-gnato", "-gnateA", "-gnatVa",
+                               "-gnatwa.f", "-gnatwZ", "-gnatyaAbCdfhiknprux");
+
+   Coverage_Compiler_Switches := ("-ftest-coverage", "-fprofile-arcs");
+
+   Optimize_Compiler_Switches := ("-gnat2012", "-O3", "-gnatn");
+
+   package Compiler is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use
+              Debug_Compiler_Switches;
+         when "coverage" =>
+            for Default_Switches ("ada") use
+              Debug_Compiler_Switches & Coverage_Compiler_Switches;
+         when "optimize" =>
+            for Default_Switches ("ada") use
+              Optimize_Compiler_Switches;
+      end case;
+   end Compiler;
+
+   package Linker is
+      case Mode is
+         when "coverage" =>
+            for Default_Switches ("ada") use ("-g", "-fprofile-generate");
+         when "debug" | "optimize" =>
+            for Default_Switches ("ada") use ("");
+      end case;
+   end Linker;
+
+end Ada_BinToAsc_Tests;
