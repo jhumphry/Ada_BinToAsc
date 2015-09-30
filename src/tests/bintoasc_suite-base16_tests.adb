@@ -67,6 +67,14 @@ package body BinToAsc_Suite.Base16_Tests is
    -- Check_Junk_Rejection --
    --------------------------
 
+   -- This procedure cannot be nested inside Check_Junk_Rejection due to access
+   -- level restrictions
+   procedure Should_Raise_Exception_From_Junk is
+      Discard : Storage_Array(1..6);
+   begin
+      Discard  := RFC4648.Base16.To_Bin("666F6F6Z6172");
+   end;
+
    procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
@@ -76,6 +84,10 @@ package body BinToAsc_Suite.Base16_Tests is
       Result_Length : Storage_Offset;
 
    begin
+
+      Assert_Exception(Should_Raise_Exception_From_Junk'Access,
+                       "Base16 decoder did not reject junk input.");
+
       Base16_Decoder.Reset;
 
       Base16_Decoder.Process(Input => "666F6F6Z6172",
