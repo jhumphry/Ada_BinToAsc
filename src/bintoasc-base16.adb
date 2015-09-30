@@ -66,6 +66,12 @@ package body BinToAsc.Base16 is
       Output_Length := 0;
    end Completed;
 
+   function To_String_Private is
+     new BinToAsc.To_String(Codec => Base16_To_String);
+
+   function To_String (Input : in Bin_Array) return String
+                       renames To_String_Private;
+
    --
    -- Base16_To_Bin
    --
@@ -161,6 +167,10 @@ package body BinToAsc.Base16 is
       Output := (others => 0);
       Output_Length := 0;
    end Completed;
+
+   function To_Bin_Private is new BinToAsc.To_Bin(Codec => Base16_To_Bin);
+
+   function To_Bin (Input : in String) return Bin_Array renames To_Bin_Private;
 
 begin
 

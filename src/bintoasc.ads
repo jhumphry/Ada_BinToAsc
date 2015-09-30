@@ -71,6 +71,18 @@ package BinToAsc is
                           Output'Length >= Output_Group_Size(C)),
        Post'Class => C.State in Complete | Failed;
 
+   -- Helper functions
+
+   generic
+      type Codec is new Codec_To_String with private;
+   function To_String (Input : in Bin_Array) return String;
+
+   Invalid_Data : exception;
+
+   generic
+      type Codec is new Codec_To_Bin with private;
+   function To_Bin (Input : in String) return Bin_Array;
+
    -- Define Alphabet types
 
    subtype Alphabet_Index is Integer range 0..254;

@@ -34,6 +34,8 @@ package BinToAsc.Base16 is
                         Output_Length : out Natural)
      with Post => (Output_Length = 0 or Output_Length = 2);
 
+   function To_String (Input : in Bin_Array) return String;
+
    type Base16_To_Bin is new Codec_To_Bin with private;
 
    procedure Reset (C : out Base16_To_Bin);
@@ -60,6 +62,8 @@ package BinToAsc.Base16 is
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
      with Post => (Output_Length = 0);
+
+   function To_Bin (Input : in String) return Bin_Array;
 
 private
 
