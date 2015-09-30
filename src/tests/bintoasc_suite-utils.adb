@@ -217,11 +217,9 @@ package body BinToAsc_Suite.Utils is
 
             BinToAsc_Decoder.Completed(Output => Buffer_Bin,
                                        Output_Length => Buffer_Bin_Used);
-            if Buffer_Bin_Used > 0 then
-               Result_Bin(Result_Bin_Length + 1 .. Result_Bin_Length + Buffer_Bin_Used) :=
-                 Buffer_Bin(1..Buffer_Bin_Used);
-               Result_Bin_Length := Result_Bin_Length + Buffer_Bin_Used;
-            end if;
+            Assert (Buffer_Bin_Used = 0,
+                    "BinToAsc decoder should not generate output on " &
+                      "completion as the binary output can never be padded.");
 
             Assert(BinToAsc_Decoder.State = Complete,
                    "BinToAsc decoder not terminating correctly.");
@@ -336,12 +334,11 @@ package body BinToAsc_Suite.Utils is
             end loop;
 
             BinToAsc_Decoder.Completed(Output => Buffer_Bin,
-                                     Output_Length => Buffer_Bin_Used);
-            if Buffer_Bin_Used > 0 then
-               Result_Bin(Result_Bin_Length + 1 .. Result_Bin_Length + Buffer_Bin_Used) :=
-                 Buffer_Bin(1..Buffer_Bin_Used);
-               Result_Bin_Length := Result_Bin_Length + Buffer_Bin_Used;
-            end if;
+                                       Output_Length => Buffer_Bin_Used);
+
+            Assert (Buffer_Bin_Used = 0,
+                    "BinToAsc decoder should not generate output on " &
+                      "completion as the binary output can never be padded.");
 
             Assert(BinToAsc_Decoder.State = Complete,
                    "BinToAsc decoder not terminating correctly.");
