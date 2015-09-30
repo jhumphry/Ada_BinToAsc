@@ -59,4 +59,10 @@ package BinToAsc_Suite.Base16_Tests is
                                                                 Codec_To_Bin => RFC4648.Base16.Base16_To_Bin,
                                                                 Max_Buffer_Length => 20);
 
+   procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
+
+   procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class);
+
+   procedure Check_Incomplete_Group_Rejection (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Base16_Tests;
