@@ -6,7 +6,6 @@
 with System.Storage_Elements;
 with BinToAsc, BinToAsc.Base16, BinToAsc.Base64;
 
-
 package RFC4648 is
 
    package BToA is new BinToAsc(Bin => System.Storage_Elements.Storage_Element,
@@ -18,8 +17,17 @@ package RFC4648 is
    function Complete return BToA.Codec_State renames BToA.Complete;
    function Failed return BToA.Codec_State renames BToA.Failed;
 
-   package Base16 is new BToA.Base16; -- default generic parameters are suitable
+   Base16_Alphabet : constant BToA.Alphabet_16 := "0123456789ABCDEF";
+   package Base16 is new BToA.Base16(Alphabet       => Base16_Alphabet,
+                                     Case_Sensitive => True);
+   package Hex renames Base16;
 
-   package Base64 is new BToA.Base64; -- default generic parameters are suitable
+   Base64_Alphabet : constant BToA.Alphabet_64 :=
+     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+   package Base64 is new BToA.Base64(Alphabet => Base64_Alphabet,
+                                     Padding  => '=');
+
+
 
 end RFC4648;

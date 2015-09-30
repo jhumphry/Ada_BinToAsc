@@ -4,8 +4,8 @@
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
 generic
-   Alphabet : Alphabet_16 := "0123456789ABCDEF";
-   Case_Sensitive : Boolean := True;
+   Alphabet : Alphabet_16;
+   Case_Sensitive : Boolean;
 package BinToAsc.Base16 is
 
    type Base16_To_String is new Codec_To_String with null record;

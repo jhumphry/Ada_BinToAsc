@@ -4,8 +4,8 @@
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
 generic
-   Alphabet : Alphabet_64 := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-   Padding : Character := '=';
+   Alphabet : Alphabet_64;
+   Padding : Character;
 package BinToAsc.Base64 is
 
    type Base64_To_String is new Codec_To_String with private;
