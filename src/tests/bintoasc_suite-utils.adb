@@ -27,12 +27,8 @@ package body BinToAsc_Suite.Utils is
    procedure Check_Test_Vectors_To_String (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
-      BinToAsc_Encoder : Codec_To_String;
-
-      Result_String : String(1..Max_Buffer_Length);
-      Result_String_Length : Integer;
-      Result_Tail_Length : Integer;
-      Result_Total_Length : Integer;
+      function Bin_To_String is
+        new RFC4648.BToA.To_String(Codec => Codec_To_String);
 
    begin
       for T of Test_Vectors loop
@@ -40,30 +36,9 @@ package body BinToAsc_Suite.Utils is
             Unencoded : constant String := To_String(T.Unencoded);
             Encoded : constant String := To_String(T.Encoded);
          begin
-            BinToAsc_Encoder.Reset;
-
-            BinToAsc_Encoder.Process(Input => STSA(Unencoded),
-                                     Output => Result_String,
-                                     Output_Length => Result_String_Length);
-
-            Assert( BinToAsc_Encoder.State = Ready,
-                   "BinToAsc encoder failing during coversion.");
-
-            BinToAsc_Encoder.Completed(Output => Result_String(Result_String_Length + 1 .. Result_String'Last),
-                                       Output_Length => Result_Tail_Length);
-
-            Result_Total_Length := Result_String_Length + Result_Tail_Length;
-
-            Assert(Result_String(1..Result_Total_Length) = Encoded,
-                   "BinToAsc encoder on: " &
-                     Unencoded &
-                     " gives wrong result: " &
-                     Result_String(1..Result_Total_Length) &
-                     " instead of: " &
-                     Encoded);
-
-            Assert( BinToAsc_Encoder.State = Complete,
-                   "BinToAsc encoder not terminating correctly.");
+            Assert( Bin_To_String(STSA(Unencoded)) = Encoded,
+                    "BinToAsc encoder not generating correct string output " &
+                      "for binary test vectors.");
          end;
       end loop;
    end Check_Test_Vectors_To_String;
@@ -75,12 +50,8 @@ package body BinToAsc_Suite.Utils is
    procedure Check_Test_Vectors_To_Bin (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
-      BinToAsc_Decoder : Codec_To_Bin;
-
-      Result_Bin : Storage_Array(1..Storage_Offset(Max_Buffer_Length));
-      Result_Bin_Length : Storage_Offset;
-      Result_Tail_Length : Storage_Offset;
-      Result_Total_Length : Storage_Offset;
+      function String_To_Bin is
+        new RFC4648.BToA.To_Bin(Codec => Codec_To_Bin);
 
    begin
       for T of Test_Vectors loop
@@ -88,30 +59,9 @@ package body BinToAsc_Suite.Utils is
             Unencoded : constant String := To_String(T.Unencoded);
             Encoded : constant String := To_String(T.Encoded);
          begin
-            BinToAsc_Decoder.Reset;
-
-            BinToAsc_Decoder.Process(Input => Encoded,
-                                     Output => Result_Bin,
-                                     Output_Length => Result_Bin_Length);
-
-            Assert(BinToAsc_Decoder.State = Ready,
-                   "BinToAsc decoder failing during coversion.");
-
-            BinToAsc_Decoder.Completed(Output => Result_Bin(Result_Bin_Length + 1 .. Result_Bin'Last),
-                                       Output_Length => Result_Tail_Length);
-
-            Result_Total_Length := Result_Bin_Length + Result_Tail_Length;
-
-            Assert(SATS(Result_Bin(1..Result_Total_Length)) = Unencoded,
-                   "BinToAsc decoder on: " &
-                     Encoded &
-                     " gives wrong result: " &
-                     SATS(Result_Bin(1..Result_Total_Length)) &
-                     " instead of: " &
-                     Unencoded);
-
-            Assert(BinToAsc_Decoder.State = Complete,
-                   "BinToAsc decoder not terminating correctly.");
+            Assert( SATS(String_To_Bin(Encoded)) = Unencoded,
+                    "BinToAsc decoder not generating correct binary output " &
+                      "for string test vectors.");
          end;
       end loop;
    end Check_Test_Vectors_To_Bin;
