@@ -6,6 +6,7 @@
 with AUnit.Assertions;
 
 with RFC4648;
+with BinToAsc.Testable;
 
 package body BinToAsc_Suite.Misc_Tests is
 
@@ -22,6 +23,8 @@ package body BinToAsc_Suite.Misc_Tests is
    begin
       Register_Routine (T, Check_Valid_Alphabet'Access,
                         "Check the validation of alphabets for use with codecs works");
+      Register_Routine (T, Check_Make_Reverse_Alphabet'Access,
+                        "Check building the reverse look-up table for alphabets");
    end Register_Tests;
 
    ----------
@@ -76,5 +79,19 @@ package body BinToAsc_Suite.Misc_Tests is
              "Valid_Alphabet accepts " & String(Case_Wise) & " as a valid "&
                "despite duplicate values when case is not considered");
    end Check_Valid_Alphabet;
+
+    --------------------------------
+   -- Check_Make_Reverse_Alphabet --
+   ---------------------------------
+
+   procedure Check_Make_Reverse_Alphabet (T : in out Test_Cases.Test_Case'Class) is
+
+      package Testable is new BToA.Testable;
+
+   begin
+
+      Testable.Check_Make_Reverse_Alphabet(T);
+
+   end Check_Make_Reverse_Alphabet;
 
 end BinToAsc_Suite.Misc_Tests;

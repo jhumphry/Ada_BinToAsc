@@ -89,6 +89,7 @@ package body BinToAsc is
                R(A(I)) := Bin(I mod Bin'Modulus);
             else
                R(To_Lower(A(I))) := Bin(I mod Bin'Modulus);
+               R(To_Upper(A(I))) := Bin(I mod Bin'Modulus);
             end if;
          end loop;
       end return;

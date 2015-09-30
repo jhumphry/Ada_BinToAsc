@@ -18,4 +18,6 @@ package BinToAsc_Suite.Misc_Tests is
 
    procedure Check_Valid_Alphabet (T : in out Test_Cases.Test_Case'Class);
 
+   procedure Check_Make_Reverse_Alphabet (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Misc_Tests;
