@@ -10,7 +10,7 @@ with BinToAsc.Testable;
 
 package body BinToAsc_Suite.Misc_Tests is
 
-   use Aunit.Assertions;
+   use AUnit.Assertions;
 
    use RFC4648;
 

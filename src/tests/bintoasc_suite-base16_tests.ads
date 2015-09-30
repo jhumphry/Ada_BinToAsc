@@ -36,7 +36,6 @@ package BinToAsc_Suite.Base16_Tests is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_Bin(Test_Vectors => Base16_Test_Vectors,
                                                         Codec_To_Bin => RFC4648.Base16.Base16_To_Bin);
 
-
    procedure Check_Test_Vectors_Incremental_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_Incremental_To_String(Test_Vectors => Base16_Test_Vectors,
                                                                        Codec_To_String => RFC4648.Base16.Base16_To_String,

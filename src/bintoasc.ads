@@ -12,11 +12,11 @@ package BinToAsc is
    type Codec_State is (Ready, Complete, Failed);
 
    type Codec is abstract tagged record
-      State : Codec_State := READY;
+      State : Codec_State := Ready;
    end record;
 
    procedure Reset (C : out Codec) is abstract
-     with Post'Class => (C.State = READY);
+     with Post'Class => (C.State = Ready);
    -- Reset a Codec to its initial state
 
    function Input_Group_Size (C : in Codec) return Positive is abstract;

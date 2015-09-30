@@ -10,7 +10,7 @@ with Ada.Assertions;
 
 package body BinToAsc_Suite.Base64_Tests is
 
-   use Aunit.Assertions;
+   use AUnit.Assertions;
    use System.Storage_Elements;
 
    use RFC4648;
@@ -215,7 +215,6 @@ package body BinToAsc_Suite.Base64_Tests is
       Discard  := RFC4648.Base64.To_Bin("Zm9v:mFy");
    end;
 
-
    procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
@@ -261,7 +260,7 @@ package body BinToAsc_Suite.Base64_Tests is
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
-            null;-- Preconditions (if active) will not allow Completed to be run
+            null; -- Preconditions (if active) will not allow Completed to be run
                   -- on a codec with state /= Ready.
       end;
 
@@ -319,7 +318,7 @@ package body BinToAsc_Suite.Base64_Tests is
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
-            null;-- Preconditions (if active) will not allow Completed to be run
+            null; -- Preconditions (if active) will not allow Completed to be run
                   -- on a codec with state /= Ready.
       end;
 

@@ -3,7 +3,6 @@
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
-
 with BinToAsc_Suite;
 
 with AUnit.Run;

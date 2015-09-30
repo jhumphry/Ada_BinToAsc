@@ -10,7 +10,7 @@ with AUnit.Assertions;
 package body BinToAsc.Testable is
 
    use Ada.Characters.Handling;
-   use Aunit.Assertions;
+   use AUnit.Assertions;
 
    ---------------------------------
    -- Check_Make_Reverse_Alphabet --

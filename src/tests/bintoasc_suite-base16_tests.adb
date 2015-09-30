@@ -10,7 +10,7 @@ with System.Storage_Elements;
 
 package body BinToAsc_Suite.Base16_Tests is
 
-   use Aunit.Assertions;
+   use AUnit.Assertions;
    use System.Storage_Elements;
 
    use RFC4648;
@@ -120,7 +120,7 @@ package body BinToAsc_Suite.Base16_Tests is
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
-            null;-- Preconditions (if active) will not allow Completed to be run
+            null; -- Preconditions (if active) will not allow Completed to be run
                   -- on a codec with state /= Ready.
       end;
 
@@ -178,7 +178,7 @@ package body BinToAsc_Suite.Base16_Tests is
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
-            null;-- Preconditions (if active) will not allow Completed to be run
+            null; -- Preconditions (if active) will not allow Completed to be run
                   -- on a codec with state /= Ready.
       end;
 
@@ -217,6 +217,5 @@ package body BinToAsc_Suite.Base16_Tests is
       Assert(Base16_Decoder.State = Failed, "Base16 decoder did not complain " &
                "about receiving an incomplete group.");
    end Check_Incomplete_Group_Rejection;
-
 
 end BinToAsc_Suite.Base16_Tests;
