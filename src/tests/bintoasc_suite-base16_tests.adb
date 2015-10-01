@@ -23,7 +23,8 @@ package body BinToAsc_Suite.Base16_Tests is
    procedure Register_Tests (T: in out Base16_Test) is
       use AUnit.Test_Cases.Registration;
    begin
-
+      Register_Routine (T, Check_Symmetry'Access,
+                        "Check the Encoder and Decoder are a symmetrical pair");
       Register_Routine (T, Check_Test_Vectors_To_String'Access,
                         "Check test vectors from RFC4648, binary -> string");
       Register_Routine (T, Check_Test_Vectors_To_Bin'Access,

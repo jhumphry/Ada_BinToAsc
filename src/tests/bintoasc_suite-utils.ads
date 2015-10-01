@@ -11,6 +11,11 @@ with RFC4648;
 package BinToAsc_Suite.Utils is
 
    generic
+      type Codec_To_String is new RFC4648.BToA.Codec_To_String with private;
+      type Codec_To_Bin is new RFC4648.BToA.Codec_To_Bin with private;
+   procedure Check_Symmetry (T : in out Test_Cases.Test_Case'Class);
+
+   generic
       Test_Vectors : Test_Vector_Array;
       type Codec_To_String is new RFC4648.BToA.Codec_To_String with private;
    procedure Check_Test_Vectors_To_String (T : in out Test_Cases.Test_Case'Class);
