@@ -80,13 +80,13 @@ package body BinToAsc.Base32 is
       Output_Length := Output_Index - Output'First;
    end Process;
 
-   procedure Completed
+   procedure Complete
      (C : in out Base32_To_String;
       Output : out String;
       Output_Length : out Natural)
    is
    begin
-      C.State := Complete;
+      C.State := Completed;
       case C.Next_Index is
          when 0 =>
             Output := (others => ' ');
@@ -136,7 +136,7 @@ package body BinToAsc.Base32 is
                         others => ' ');
             Output_Length := 8;
       end case;
-   end Completed;
+   end Complete;
 
    function To_String_Private is
      new BinToAsc.To_String(Codec => Base32_To_String);
@@ -290,7 +290,7 @@ package body BinToAsc.Base32 is
       if C.Next_Index /= 0 then
          C.State := Failed;
       else
-         C.State := Complete;
+         C.State := Completed;
       end if;
       Output := (others => 0);
       Output_Length := 0;

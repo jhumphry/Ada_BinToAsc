@@ -136,7 +136,7 @@ package body BinToAsc_Suite.Utils is
                end if;
             end loop;
 
-            BinToAsc_Encoder.Completed(Output => Buffer_String,
+            BinToAsc_Encoder.Complete(Output => Buffer_String,
                                        Output_Length => Buffer_String_Used);
             if Buffer_String_Used > 0 then
                Result_String(Result_String_Length + 1 .. Result_String_Length + Buffer_String_Used) :=
@@ -255,7 +255,7 @@ package body BinToAsc_Suite.Utils is
                end if;
             end loop;
 
-            BinToAsc_Encoder.Completed(Output => Buffer_String,
+            BinToAsc_Encoder.Complete(Output => Buffer_String,
                                      Output_Length => Buffer_String_Used);
             if Buffer_String_Used > 0 then
                Result_String(Result_String_Length + 1 .. Result_String_Length + Buffer_String_Used) :=

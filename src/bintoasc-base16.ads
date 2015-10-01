@@ -29,7 +29,7 @@ package BinToAsc.Base16 is
      with Post => (Output_Length / 2 = Input'Length and
                      Output_Length mod 2 = 0);
 
-   procedure Completed (C : in out Base16_To_String;
+   procedure Complete (C : in out Base16_To_String;
                         Output : out String;
                         Output_Length : out Natural)
      with Post => (Output_Length = 0 or Output_Length = 2);

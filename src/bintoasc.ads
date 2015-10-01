@@ -9,7 +9,7 @@ generic
    type Bin_Array is array (Bin_Array_Index range <>) of Bin;
 package BinToAsc is
 
-   type Codec_State is (Ready, Complete, Failed);
+   type Codec_State is (Ready, Completed, Failed);
 
    type Codec is abstract tagged record
       State : Codec_State := Ready;
@@ -40,12 +40,12 @@ package BinToAsc is
                           Output'Length / Output_Group_Size(C) >=
                             Input'Length / Input_Group_Size(C) + 1);
 
-   procedure Completed (C : in out Codec_To_String;
+   procedure Complete (C : in out Codec_To_String;
                         Output : out String;
                         Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C)),
-       Post'Class => C.State in Complete | Failed;
+       Post'Class => C.State in Completed | Failed;
 
    type Codec_To_Bin is abstract new Codec with null record;
 
@@ -69,7 +69,7 @@ package BinToAsc is
                         Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C)),
-       Post'Class => C.State in Complete | Failed;
+       Post'Class => C.State in Completed | Failed;
 
    -- Helper functions
 

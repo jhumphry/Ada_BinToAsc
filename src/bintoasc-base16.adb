@@ -55,16 +55,16 @@ package body BinToAsc.Base16 is
       end loop;
    end Process;
 
-   procedure Completed
+   procedure Complete
      (C : in out Base16_To_String;
       Output : out String;
       Output_Length : out Natural)
    is
    begin
-      C.State := Complete;
+      C.State := Completed;
       Output := (others => ' ');
       Output_Length := 0;
-   end Completed;
+   end Complete;
 
    function To_String_Private is
      new BinToAsc.To_String(Codec => Base16_To_String);
@@ -160,7 +160,7 @@ package body BinToAsc.Base16 is
    is
    begin
       if C.Loaded = False then
-         C.State := Complete;
+         C.State := Completed;
       else
          C.State := Failed;
       end if;

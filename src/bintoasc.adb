@@ -26,10 +26,10 @@ package body BinToAsc is
       if C.State /= Ready then
          raise Program_Error with "Could not convert data";
       end if;
-      Completed(C => C,
+      Complete(C => C,
                 Output => Buffer(Result_Length + 1 .. Buffer'Last),
                 Output_Length => Tail_Length);
-      if C.State /= Complete then
+      if C.State /= Completed then
          raise Program_Error with "Could not convert data";
       end if;
       return Buffer(1 .. Result_Length + Tail_Length);
@@ -55,7 +55,7 @@ package body BinToAsc is
       Completed(C => C,
                 Output => Buffer(Result_Length + 1 .. Buffer'Last),
                 Output_Length => Tail_Length);
-      if C.State /= Complete then
+      if C.State /= Completed then
          raise Invalid_Data;
       end if;
       return Buffer(1 .. Result_Length + Tail_Length);

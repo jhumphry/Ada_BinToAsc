@@ -14,7 +14,7 @@ package RFC4648 is
 
    subtype Codec_State is BToA.Codec_State;
    function Ready return BToA.Codec_State renames BToA.Ready;
-   function Complete return BToA.Codec_State renames BToA.Complete;
+   function Complete return BToA.Codec_State renames BToA.Completed;
    function Failed return BToA.Codec_State renames BToA.Failed;
 
    Base16_Alphabet : constant BToA.Alphabet_16 := "0123456789ABCDEF";

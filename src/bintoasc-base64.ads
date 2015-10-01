@@ -29,7 +29,7 @@ package BinToAsc.Base64 is
      with Post => (Output_Length / 4 = Input'Length / 3 or
                      Output_Length / 4 = Input'Length / 3 + 1);
 
-   procedure Completed (C : in out Base64_To_String;
+   procedure Complete (C : in out Base64_To_String;
                         Output : out String;
                         Output_Length : out Natural)
      with Post => (Output_Length = 0 or Output_Length = 4);
