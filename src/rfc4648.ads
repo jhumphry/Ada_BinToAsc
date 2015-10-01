@@ -27,6 +27,11 @@ package RFC4648 is
    package Base32 is new BToA.Base32(Alphabet => Base32_Alphabet,
                                      Padding  => '=');
 
+   Base32Hex_Alphabet : constant BToA.Alphabet_32 :=
+     "0123456789ABCDEFGHIJKLMNOPQRSTUV";
+   package Base32Hex is new BToA.Base32(Alphabet => Base32Hex_Alphabet,
+                                        Padding  => '=');
+
    Base64_Alphabet : constant BToA.Alphabet_64 :=
      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 

@@ -24,19 +24,33 @@ package body BinToAsc_Suite.Base32_Tests is
       use AUnit.Test_Cases.Registration;
    begin
       Register_Routine (T, Check_Symmetry'Access,
-                        "Check the Encoder and Decoder are a symmetrical pair");
+                        "Check the Base32 Encoder and Decoder are a symmetrical pair");
+      Register_Routine (T, Check_Symmetry_Hex'Access,
+                        "Check the Base32Hex Encoder and Decoder are a symmetrical pair");
       Register_Routine (T, Check_Test_Vectors_To_String'Access,
-                        "Check test vectors from RFC4648, binary -> string");
+                        "Check Base32 test vectors from RFC4648, binary -> string");
+      Register_Routine (T, Check_Test_Vectors_To_String_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, binary -> string");
       Register_Routine (T, Check_Test_Vectors_To_Bin'Access,
-                        "Check test vectors from RFC4648, string -> binary");
+                        "Check Base32 test vectors from RFC4648, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_To_Bin_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, string -> binary");
       Register_Routine (T, Check_Test_Vectors_Incremental_To_String'Access,
-                        "Check test vectors from RFC4648, incrementally, binary -> string");
+                        "Check Base32 test vectors from RFC4648, incrementally, binary -> string");
+       Register_Routine (T, Check_Test_Vectors_Incremental_To_String_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, incrementally, binary -> string");
       Register_Routine (T, Check_Test_Vectors_Incremental_To_Bin'Access,
-                        "Check test vectors from RFC4648, incrementally, string -> binary");
+                        "Check Base32 test vectors from RFC4648, incrementally, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_Incremental_To_Bin_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, incrementally, string -> binary");
       Register_Routine (T, Check_Test_Vectors_By_Char_To_String'Access,
-                        "Check test vectors from RFC4648, character-by-character, binary -> string");
+                        "Check Base32 test vectors from RFC4648, character-by-character, binary -> string");
+      Register_Routine (T, Check_Test_Vectors_By_Char_To_String_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, character-by-character, binary -> string");
       Register_Routine (T, Check_Test_Vectors_By_Char_To_Bin'Access,
-                        "Check test vectors from RFC4648, character-by-character, string -> binary");
+                        "Check Base32 test vectors from RFC4648, character-by-character, string -> binary");
+      Register_Routine (T, Check_Test_Vectors_By_Char_To_Bin_Hex'Access,
+                        "Check Base32Hex test vectors from RFC4648, character-by-character, string -> binary");
 --        Register_Routine (T, Check_Padding'Access,
 --                          "Check correct Base64 padding is enforced");
 --        Register_Routine (T, Check_Junk_Rejection'Access,
@@ -53,7 +67,7 @@ package body BinToAsc_Suite.Base32_Tests is
    function Name (T : Base32_Test) return Test_String is
       pragma Unreferenced (T);
    begin
-      return Format ("Tests of Base32 codec from RFC4648");
+      return Format ("Tests of Base32 and Base32Hex codecs from RFC4648");
    end Name;
 
    ------------
