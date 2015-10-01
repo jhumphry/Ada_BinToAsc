@@ -5,6 +5,7 @@
 
 with BinToAsc_Suite.Misc_Tests;
 with BinToAsc_Suite.Base16_Tests;
+with BinToAsc_Suite.Base32_Tests;
 with BinToAsc_Suite.Base64_Tests;
 
 package body BinToAsc_Suite is
@@ -14,6 +15,7 @@ package body BinToAsc_Suite is
 
    Test_Misc : aliased Misc_Tests.Misc_Test;
    Test_Base16 : aliased Base16_Tests.Base16_Test;
+   Test_Base32 : aliased Base32_Tests.Base32_Test;
    Test_Base64 : aliased Base64_Tests.Base64_Test;
 
    -----------
@@ -24,6 +26,7 @@ package body BinToAsc_Suite is
    begin
       Add_Test (Result'Access, Test_Misc'Access);
       Add_Test (Result'Access, Test_Base16'Access);
+      Add_Test (Result'Access, Test_Base32'Access);
       Add_Test (Result'Access, Test_Base64'Access);
       return Result'Access;
    end Suite;

@@ -13,6 +13,7 @@ project Ada_BinToAsc is
 
    for Library_Interface use ("BinToAsc",
                               "BinToAsc.Base16",
+                              "BinToAsc.Base32",
                               "BinToAsc.Base64",
                               "RFC4648"
                              );

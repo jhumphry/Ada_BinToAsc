@@ -4,7 +4,7 @@
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
 with System.Storage_Elements;
-with BinToAsc, BinToAsc.Base16, BinToAsc.Base64;
+with BinToAsc, BinToAsc.Base16, BinToAsc.Base32, BinToAsc.Base64;
 
 package RFC4648 is
 
@@ -21,6 +21,11 @@ package RFC4648 is
    package Base16 is new BToA.Base16(Alphabet       => Base16_Alphabet,
                                      Case_Sensitive => True);
    package Hex renames Base16;
+
+   Base32_Alphabet : constant BToA.Alphabet_32 :=
+     "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+   package Base32 is new BToA.Base32(Alphabet => Base32_Alphabet,
+                                     Padding  => '=');
 
    Base64_Alphabet : constant BToA.Alphabet_64 :=
      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

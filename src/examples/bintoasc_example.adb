@@ -31,6 +31,20 @@ begin
    Put_Line("'");
    New_Line;
 
+   -- Demonstrate coding into BASE32
+   Put_Line("According to RFC4648 BASE32('foobar') = 'MZXW6YTBOI======'");
+   Put("According to this package BASE32('foobar') = '");
+   Put(Base32.To_String(String_To_Storage_Array("foobar")));
+   Put_Line("'");
+
+   New_Line;
+   -- Demonstrate decoding from BASE32
+   Put_Line("According to RFC4648 BASE32^{-1}('MZXW6YTBOI======') = 'foobar'");
+   Put("According to this package BASE32^{-1}('MZXW6YTBOI======') = '");
+   Put(Storage_Array_To_String(Base32.To_Bin("MZXW6YTBOI======")));
+   Put_Line("'");
+   New_Line;
+
    -- Demonstrate coding into BASE64
    Put_Line("According to RFC4648 BASE64('foobar') = 'Zm9vYmFy'");
    Put("According to this package BASE16('foobar') = '");

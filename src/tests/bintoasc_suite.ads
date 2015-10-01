@@ -10,7 +10,7 @@ with AUnit.Test_Suites;
 package BinToAsc_Suite is
 
    package Test_Vector_Strings is
-     new Ada.Strings.Bounded.Generic_Bounded_Length(Max => 12);
+     new Ada.Strings.Bounded.Generic_Bounded_Length(Max => 16);
    use all type Test_Vector_Strings.Bounded_String;
 
    function TBS (Source : in String;
