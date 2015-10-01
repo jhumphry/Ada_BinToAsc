@@ -3,15 +3,15 @@
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
---  with AUnit.Assertions;
+with AUnit.Assertions;
 
---  with System.Storage_Elements;
---  with Ada.Assertions;
+with System.Storage_Elements;
+with Ada.Assertions;
 
 package body BinToAsc_Suite.Base32_Tests is
 
---     use AUnit.Assertions;
---     use System.Storage_Elements;
+   use AUnit.Assertions;
+   use System.Storage_Elements;
 
    use RFC4648;
    use type RFC4648.Codec_State;
@@ -53,10 +53,10 @@ package body BinToAsc_Suite.Base32_Tests is
                         "Check Base32Hex test vectors from RFC4648, character-by-character, string -> binary");
 --        Register_Routine (T, Check_Padding'Access,
 --                          "Check correct Base64 padding is enforced");
---        Register_Routine (T, Check_Junk_Rejection'Access,
---                          "Check Base64 decoder will reject junk input");
---        Register_Routine (T, Check_Junk_Rejection_By_Char'Access,
---                          "Check Base64 decoder will reject junk input (single character)");
+      Register_Routine (T, Check_Junk_Rejection'Access,
+                        "Check Base32 decoder will reject junk input");
+      Register_Routine (T, Check_Junk_Rejection_By_Char'Access,
+                        "Check Base32 decoder will reject junk input (single character)");
 
    end Register_Tests;
 
@@ -218,132 +218,132 @@ package body BinToAsc_Suite.Base32_Tests is
 --
 --     end Check_Padding;
 --
---     --------------------------
---     -- Check_Junk_Rejection --
---     --------------------------
---
---     -- This procedure cannot be nested inside Check_Junk_Rejection due to access
---     -- level restrictions
---     procedure Should_Raise_Exception_From_Junk is
---        Discard : Storage_Array(1..6);
---     begin
---        Discard  := RFC4648.Base64.To_Bin("Zm9v:mFy");
---     end;
---
---     procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class) is
---        pragma Unreferenced (T);
---
---        Base64_Decoder : RFC4648.Base64.Base64_To_Bin;
---
---        Result_Bin : Storage_Array(1..20);
---        Result_Length : Storage_Offset;
---
---     begin
---
---        Assert_Exception(Should_Raise_Exception_From_Junk'Access,
---                         "Base64 decoder did not reject junk input.");
---
---        Base64_Decoder.Reset;
---
---        Base64_Decoder.Process(Input => "Zm9v:mFy",
---                               Output => Result_Bin,
---                               Output_Length => Result_Length);
---        Assert(Base64_Decoder.State = Failed,
---               "Base64 decoder did not reject junk input.");
---        Assert(Result_Length = 0,
---               "Base64 decoder rejected junk input but did not return 0 " &
---                 "length output.");
---
---        begin
---           Base64_Decoder.Process(Input => "Zm",
---                                  Output => Result_Bin,
---                                  Output_Length => Result_Length);
---        exception
---           when Ada.Assertions.Assertion_Error =>
---              null; -- Preconditions (if active) will not allow Process to be run
---                    -- on a codec with state /= Ready.
---        end;
---
---        Assert(Base64_Decoder.State = Failed,
---               "Base64 decoder reset its state on valid input after junk input.");
---        Assert(Result_Length = 0,
---               "Base64 decoder rejected input after a junk input but did " &
---                 "not return 0 length output.");
---
---        begin
---           Base64_Decoder.Completed(Output => Result_Bin,
---                                  Output_Length => Result_Length);
---        exception
---           when Ada.Assertions.Assertion_Error =>
---              null; -- Preconditions (if active) will not allow Completed to be run
---                    -- on a codec with state /= Ready.
---        end;
---
---        Assert(Base64_Decoder.State = Failed,
---               "Base16 decoder allowed successful completion after junk input.");
---
---        Assert(Result_Length = 0,
---               "Base64 decoder completed after a junk input did " &
---                 "not return 0 length output.");
---     end Check_Junk_Rejection;
---
---     ----------------------------------
---     -- Check_Junk_Rejection_By_Char --
---     ----------------------------------
---
---     procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class) is
---        pragma Unreferenced (T);
---
---        Base64_Decoder : RFC4648.Base64.Base64_To_Bin;
---
---        Result_Bin : Storage_Array(1..20);
---        Result_Length : Storage_Offset;
---
---     begin
---        Base64_Decoder.Reset;
---
---        Base64_Decoder.Process(Input => '@',
---                               Output => Result_Bin,
---                               Output_Length => Result_Length);
---        Assert(Base64_Decoder.State = Failed,
---               "Base64 decoder did not reject junk input character.");
---        Assert(Result_Length = 0,
---               "Base64 decoder rejected junk input but did not return 0 " &
---                 "length output.");
---
---        begin
---           Base64_Decoder.Process(Input => '6',
---                                  Output => Result_Bin,
---                                  Output_Length => Result_Length);
---        exception
---           when Ada.Assertions.Assertion_Error =>
---              null; -- Preconditions (if active) will not allow Process to be run
---                    -- on a codec with state /= Ready.
---        end;
---
---        Assert(Base64_Decoder.State = Failed,
---               "Base64 decoder reset its state on valid input after junk input " &
---                 "character.");
---        Assert(Result_Length = 0,
---               "Base64 decoder rejected input after a junk input char but did " &
---                 "not return 0 length output.");
---
---        begin
---           Base64_Decoder.Completed(Output => Result_Bin,
---                                  Output_Length => Result_Length);
---        exception
---           when Ada.Assertions.Assertion_Error =>
---              null; -- Preconditions (if active) will not allow Completed to be run
---                    -- on a codec with state /= Ready.
---        end;
---
---        Assert(Base64_Decoder.State = Failed,
---               "Base64 decoder allowed successful completion after junk input " &
---                 "char.");
---
---        Assert(Result_Length = 0,
---               "Base64 decoder completed after a junk input char did " &
---                 "not return 0 length output.");
---     end Check_Junk_Rejection_By_Char;
+   --------------------------
+   -- Check_Junk_Rejection --
+   --------------------------
+
+   -- This procedure cannot be nested inside Check_Junk_Rejection due to access
+   -- level restrictions
+   procedure Should_Raise_Exception_From_Junk is
+      Discard : Storage_Array(1..6);
+   begin
+      Discard  := RFC4648.Base32.To_Bin("MZXW:YTB");
+   end;
+
+   procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Base32_Decoder : RFC4648.Base32.Base32_To_Bin;
+
+      Result_Bin : Storage_Array(1..20);
+      Result_Length : Storage_Offset;
+
+   begin
+
+      Assert_Exception(Should_Raise_Exception_From_Junk'Access,
+                       "Base32 decoder did not reject junk input.");
+
+      Base32_Decoder.Reset;
+
+      Base32_Decoder.Process(Input => "MZXW:YTB",
+                             Output => Result_Bin,
+                             Output_Length => Result_Length);
+      Assert(Base32_Decoder.State = Failed,
+             "Base32 decoder did not reject junk input.");
+      Assert(Result_Length = 0,
+             "Base32 decoder rejected junk input but did not return 0 " &
+               "length output.");
+
+      begin
+         Base32_Decoder.Process(Input => "MZ",
+                                Output => Result_Bin,
+                                Output_Length => Result_Length);
+      exception
+         when Ada.Assertions.Assertion_Error =>
+            null; -- Preconditions (if active) will not allow Process to be run
+                  -- on a codec with state /= Ready.
+      end;
+
+      Assert(Base32_Decoder.State = Failed,
+             "Base32 decoder reset its state on valid input after junk input.");
+      Assert(Result_Length = 0,
+             "Base32 decoder rejected input after a junk input but did " &
+               "not return 0 length output.");
+
+      begin
+         Base32_Decoder.Completed(Output => Result_Bin,
+                                Output_Length => Result_Length);
+      exception
+         when Ada.Assertions.Assertion_Error =>
+            null; -- Preconditions (if active) will not allow Completed to be run
+                  -- on a codec with state /= Ready.
+      end;
+
+      Assert(Base32_Decoder.State = Failed,
+             "Base16 decoder allowed successful completion after junk input.");
+
+      Assert(Result_Length = 0,
+             "Base32 decoder completed after a junk input did " &
+               "not return 0 length output.");
+   end Check_Junk_Rejection;
+
+   ----------------------------------
+   -- Check_Junk_Rejection_By_Char --
+   ----------------------------------
+
+   procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Base32_Decoder : RFC4648.Base32.Base32_To_Bin;
+
+      Result_Bin : Storage_Array(1..20);
+      Result_Length : Storage_Offset;
+
+   begin
+      Base32_Decoder.Reset;
+
+      Base32_Decoder.Process(Input => '@',
+                             Output => Result_Bin,
+                             Output_Length => Result_Length);
+      Assert(Base32_Decoder.State = Failed,
+             "Base32 decoder did not reject junk input character.");
+      Assert(Result_Length = 0,
+             "Base32 decoder rejected junk input but did not return 0 " &
+               "length output.");
+
+      begin
+         Base32_Decoder.Process(Input => '6',
+                                Output => Result_Bin,
+                                Output_Length => Result_Length);
+      exception
+         when Ada.Assertions.Assertion_Error =>
+            null; -- Preconditions (if active) will not allow Process to be run
+                  -- on a codec with state /= Ready.
+      end;
+
+      Assert(Base32_Decoder.State = Failed,
+             "Base32 decoder reset its state on valid input after junk input " &
+               "character.");
+      Assert(Result_Length = 0,
+             "Base32 decoder rejected input after a junk input char but did " &
+               "not return 0 length output.");
+
+      begin
+         Base32_Decoder.Completed(Output => Result_Bin,
+                                  Output_Length => Result_Length);
+      exception
+         when Ada.Assertions.Assertion_Error =>
+            null; -- Preconditions (if active) will not allow Completed to be run
+                  -- on a codec with state /= Ready.
+      end;
+
+      Assert(Base32_Decoder.State = Failed,
+             "Base32 decoder allowed successful completion after junk input " &
+               "char.");
+
+      Assert(Result_Length = 0,
+             "Base32 decoder completed after a junk input char did " &
+               "not return 0 length output.");
+   end Check_Junk_Rejection_By_Char;
 
 end BinToAsc_Suite.Base32_Tests;

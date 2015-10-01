@@ -101,9 +101,9 @@ package BinToAsc_Suite.Base32_Tests is
                                                                 Max_Buffer_Length => 20);
 
 --     procedure Check_Padding (T : in out Test_Cases.Test_Case'Class);
---
---     procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
---
---     procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class);
+
+   procedure Check_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
+
+   procedure Check_Junk_Rejection_By_Char (T : in out Test_Cases.Test_Case'Class);
 
 end BinToAsc_Suite.Base32_Tests;
