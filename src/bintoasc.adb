@@ -86,10 +86,10 @@ package body BinToAsc is
          R := (others => Invalid_Character_Input);
          for I in A'Range loop
             if Case_Sensitive then
-               R(A(I)) := Bin(I mod Bin'Modulus);
+               R(A(I)) := I;
             else
-               R(To_Lower(A(I))) := Bin(I mod Bin'Modulus);
-               R(To_Upper(A(I))) := Bin(I mod Bin'Modulus);
+               R(To_Lower(A(I))) := I;
+               R(To_Upper(A(I))) := I;
             end if;
          end loop;
       end return;

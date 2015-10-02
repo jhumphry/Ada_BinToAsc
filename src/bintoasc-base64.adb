@@ -34,10 +34,10 @@ package body BinToAsc.Base64 is
          C.Next_Index := C.Next_Index + 1;
       else
          C.Next_Index := 0;
-         Output := ( Alphabet(Integer(C.Buffer(0) / 4)),
-                     Alphabet(Integer((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16)),
-                     Alphabet(Integer((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64)),
-                     Alphabet(Integer(C.Buffer(2) mod 64)),
+         Output := ( Alphabet(C.Buffer(0) / 4),
+                     Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
+                     Alphabet((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64),
+                     Alphabet(C.Buffer(2) mod 64),
                      others => ' ');
          Output_Length := 4;
       end if;
@@ -58,10 +58,10 @@ package body BinToAsc.Base64 is
          else
             C.Next_Index := 0;
             Output (Output_Index .. Output_Index + 3) :=
-              ( Alphabet(Integer(C.Buffer(0) / 4)),
-                Alphabet(Integer((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16)),
-                Alphabet(Integer((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64)),
-                Alphabet(Integer(C.Buffer(2) mod 64))
+              ( Alphabet(C.Buffer(0) / 4),
+                Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
+                Alphabet((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64),
+                Alphabet(C.Buffer(2) mod 64)
                );
             Output_Index := Output_Index + 4;
          end if;
@@ -81,16 +81,16 @@ package body BinToAsc.Base64 is
             Output := (others => ' ');
             Output_Length := 0;
          when 1 =>
-            Output := ( Alphabet(Integer(C.Buffer(0) / 4)),
-                        Alphabet(Integer((C.Buffer(0) mod 4) * 16 + 0)),
+            Output := ( Alphabet(C.Buffer(0) / 4),
+                        Alphabet((C.Buffer(0) mod 4) * 16 + 0),
                         Padding,
                         Padding,
                         others => ' ');
             Output_Length := 4;
          when 2 =>
-            Output := ( Alphabet(Integer(C.Buffer(0) / 4)),
-                        Alphabet(Integer((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16)),
-                        Alphabet(Integer((C.Buffer(1) mod 16) * 4 + 0)),
+            Output := ( Alphabet(C.Buffer(0) / 4),
+                        Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
+                        Alphabet((C.Buffer(1) mod 16) * 4 + 0),
                         Padding,
                         others => ' ');
             Output_Length := 4;

@@ -85,7 +85,7 @@ package BinToAsc is
 
    -- Define Alphabet types
 
-   subtype Alphabet_Index is Integer range 0..254;
+   subtype Alphabet_Index is Bin range 0..Bin'Last - 1;
    type Alphabet is array (Alphabet_Index range <>) of Character;
 
    function Valid_Alphabet (A : in Alphabet;

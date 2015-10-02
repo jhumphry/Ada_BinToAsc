@@ -29,37 +29,37 @@ package body BinToAsc.Testable is
       Reversed := Make_Reverse_Alphabet(Valid, True);
 
       Assert((for all I in Valid'Range =>
-                Reversed(Valid(I)) = Bin(I)),
+                Reversed(Valid(I)) = I),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for " & String(Valid));
       Assert((for all I in Reversed'Range =>
                 (Reversed(I) = Invalid_Character_Input or else
-                     Valid(Integer(Reversed(I))) = I)),
+                     Valid(Reversed(I)) = I)),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for " & String(Valid));
 
       Reversed := Make_Reverse_Alphabet(Valid, False);
 
       Assert((for all I in Valid'Range =>
-                Reversed(To_Upper(Valid(I))) = Bin(I) and
-                Reversed(To_Lower(Valid(I))) = Bin(I)),
+                Reversed(To_Upper(Valid(I))) = I and
+                Reversed(To_Lower(Valid(I))) = I),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for case-insensitive " & String(Valid));
       Assert((for all I in Reversed'Range =>
                 (Reversed(I) = Invalid_Character_Input or else
-                     To_Lower(Valid(Integer(Reversed(I)))) = To_Lower(I))),
+                     To_Lower(Valid(Reversed(I))) = To_Lower(I))),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for case-insensitive " & String(Valid));
 
       Reversed := Make_Reverse_Alphabet(Case_Wise, True);
 
       Assert((for all I in Case_Wise'Range =>
-                Reversed(Case_Wise(I)) = Bin(I)),
+                Reversed(Case_Wise(I)) = I),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for " & String(Case_Wise));
       Assert((for all I in Reversed'Range =>
                 (Reversed(I) = Invalid_Character_Input or else
-                     Case_Wise(Integer(Reversed(I))) = I)),
+                     Case_Wise(Reversed(I)) = I)),
              "Make_Reverse_Alphabet does not create an appropriate reverse " &
                "lookup table for " & String(Case_Wise));
 
