@@ -32,7 +32,7 @@ package body BinToAsc.Base16 is
    begin
       Output_Length := 2;
       Output := (Alphabet(Input_Index / 16),
-                 Alphabet(Input_Index mod 16),
+                 Alphabet(Input_Index and 2#00001111#),
                  others => ' ');
    end Process;
 
@@ -50,7 +50,7 @@ package body BinToAsc.Base16 is
       for I in Input'Range loop
          Input_Index := Bin'Pos(Input(I));
          Output(Output_Index) := Alphabet(Input_Index / 16);
-         Output(Output_Index + 1) := Alphabet(Input_Index mod 16);
+         Output(Output_Index + 1) := Alphabet(Input_Index and 2#00001111#);
          Output_Index := Output_Index + 2;
       end loop;
    end Process;

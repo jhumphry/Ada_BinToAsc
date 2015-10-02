@@ -35,9 +35,9 @@ package body BinToAsc.Base64 is
       else
          C.Next_Index := 0;
          Output := ( Alphabet(C.Buffer(0) / 4),
-                     Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
-                     Alphabet((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64),
-                     Alphabet(C.Buffer(2) mod 64),
+                     Alphabet((C.Buffer(0) and 2#00000011#) * 16 or C.Buffer(1) / 16),
+                     Alphabet((C.Buffer(1) and 2#00001111#) * 4 or C.Buffer(2) / 64),
+                     Alphabet(C.Buffer(2) and 2#00111111#),
                      others => ' ');
          Output_Length := 4;
       end if;
@@ -59,9 +59,9 @@ package body BinToAsc.Base64 is
             C.Next_Index := 0;
             Output (Output_Index .. Output_Index + 3) :=
               ( Alphabet(C.Buffer(0) / 4),
-                Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
-                Alphabet((C.Buffer(1) mod 16) * 4 + C.Buffer(2) / 64),
-                Alphabet(C.Buffer(2) mod 64)
+                Alphabet((C.Buffer(0) and 2#00000011#) * 16 or C.Buffer(1) / 16),
+                Alphabet((C.Buffer(1) and 2#00001111#) * 4 or C.Buffer(2) / 64),
+                Alphabet(C.Buffer(2) and 2#00111111#)
                );
             Output_Index := Output_Index + 4;
          end if;
@@ -82,15 +82,15 @@ package body BinToAsc.Base64 is
             Output_Length := 0;
          when 1 =>
             Output := ( Alphabet(C.Buffer(0) / 4),
-                        Alphabet((C.Buffer(0) mod 4) * 16 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000011#) * 16),
                         Padding,
                         Padding,
                         others => ' ');
             Output_Length := 4;
          when 2 =>
             Output := ( Alphabet(C.Buffer(0) / 4),
-                        Alphabet((C.Buffer(0) mod 4) * 16 + C.Buffer(1) / 16),
-                        Alphabet((C.Buffer(1) mod 16) * 4 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000011#) * 16 or C.Buffer(1) / 16),
+                        Alphabet((C.Buffer(1) and 2#00001111#) * 4),
                         Padding,
                         others => ' ');
             Output_Length := 4;

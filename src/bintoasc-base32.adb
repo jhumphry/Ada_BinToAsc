@@ -3,9 +3,6 @@
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
--- GNAT warns on mod 2 invocations but in this case they are not a mistake
-pragma Warnings (Off, "suspicious *mod* value, was ** intended?");
-
 package body BinToAsc.Base32 is
 
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
@@ -38,13 +35,13 @@ package body BinToAsc.Base32 is
       else
          C.Next_Index := 0;
          Output := ( Alphabet(C.Buffer(0) / 8),
-                     Alphabet((C.Buffer(0) mod 8) * 4 + C.Buffer(1) / 64),
-                     Alphabet((C.Buffer(1) mod 64) / 2),
-                     Alphabet((C.Buffer(1) mod 2) * 16 + C.Buffer(2) / 16),
-                     Alphabet((C.Buffer(2) mod 16) * 2 + C.Buffer(3) / 128),
-                     Alphabet((C.Buffer(3) mod 128) / 4),
-                     Alphabet((C.Buffer(3) mod 4) * 8 + C.Buffer(4) / 32),
-                     Alphabet(C.Buffer(4) mod 32),
+                     Alphabet((C.Buffer(0) and 2#00000111#) * 4 or C.Buffer(1) / 64),
+                     Alphabet((C.Buffer(1) and 2#00111111#) / 2),
+                     Alphabet((C.Buffer(1) and 2#00000001#) * 16 or C.Buffer(2) / 16),
+                     Alphabet((C.Buffer(2) and 2#00001111#) * 2 or C.Buffer(3) / 128),
+                     Alphabet((C.Buffer(3) and 2#01111111#) / 4),
+                     Alphabet((C.Buffer(3) and 2#00000011#) * 8 or C.Buffer(4) / 32),
+                     Alphabet(C.Buffer(4) and 2#00011111#),
                      others => ' '
                     );
          Output_Length := 8;
@@ -67,13 +64,13 @@ package body BinToAsc.Base32 is
             C.Next_Index := 0;
             Output (Output_Index .. Output_Index + 7) :=
               ( Alphabet(C.Buffer(0) / 8),
-                Alphabet((C.Buffer(0) mod 8) * 4 + C.Buffer(1) / 64),
-                Alphabet((C.Buffer(1) mod 64) / 2),
-                Alphabet((C.Buffer(1) mod 2) * 16 + C.Buffer(2) / 16),
-                Alphabet((C.Buffer(2) mod 16) * 2 + C.Buffer(3) / 128),
-                Alphabet((C.Buffer(3) mod 128) / 4),
-                Alphabet((C.Buffer(3) mod 4) * 8 + C.Buffer(4) / 32),
-                Alphabet(C.Buffer(4) mod 32)
+                Alphabet((C.Buffer(0) and 2#00000111#) * 4 or C.Buffer(1) / 64),
+                Alphabet((C.Buffer(1) and 2#00111111#) / 2),
+                Alphabet((C.Buffer(1) and 2#00000001#) * 16 or C.Buffer(2) / 16),
+                Alphabet((C.Buffer(2) and 2#00001111#) * 2 or C.Buffer(3) / 128),
+                Alphabet((C.Buffer(3) and 2#01111111#) / 4),
+                Alphabet((C.Buffer(3) and 2#00000011#) * 8 or C.Buffer(4) / 32),
+                Alphabet(C.Buffer(4) and 2#00011111#)
                );
             Output_Index := Output_Index + 8;
          end if;
@@ -94,7 +91,7 @@ package body BinToAsc.Base32 is
             Output_Length := 0;
          when 1 =>
             Output := ( Alphabet(C.Buffer(0) / 8),
-                        Alphabet((C.Buffer(0) mod 8) * 4 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000111#) * 4),
                         Padding,
                         Padding,
                         Padding,
@@ -105,9 +102,9 @@ package body BinToAsc.Base32 is
             Output_Length := 8;
          when 2 =>
             Output := ( Alphabet(C.Buffer(0) / 8),
-                        Alphabet((C.Buffer(0) mod 8) * 4 + C.Buffer(1) / 64),
-                        Alphabet((C.Buffer(1) mod 64) / 2),
-                        Alphabet((C.Buffer(1) mod 2) * 16 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000111#) * 4 or C.Buffer(1) / 64),
+                        Alphabet((C.Buffer(1) and 2#00111111#) / 2),
+                        Alphabet((C.Buffer(1) and 2#00000001#) * 16),
                         Padding,
                         Padding,
                         Padding,
@@ -116,10 +113,10 @@ package body BinToAsc.Base32 is
             Output_Length := 8;
          when 3 =>
             Output := ( Alphabet(C.Buffer(0) / 8),
-                        Alphabet((C.Buffer(0) mod 8) * 4 + C.Buffer(1) / 64),
-                        Alphabet((C.Buffer(1) mod 64) / 2),
-                        Alphabet((C.Buffer(1) mod 2) * 16 + C.Buffer(2) / 16),
-                        Alphabet((C.Buffer(2) mod 16) * 2 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000111#) * 4 or C.Buffer(1) / 64),
+                        Alphabet((C.Buffer(1) and 2#00111111#) / 2),
+                        Alphabet((C.Buffer(1) and 2#00000001#) * 16 or C.Buffer(2) / 16),
+                        Alphabet((C.Buffer(2) and 2#00001111#) * 2),
                         Padding,
                         Padding,
                         Padding,
@@ -127,12 +124,12 @@ package body BinToAsc.Base32 is
             Output_Length := 8;
          when 4 =>
             Output := ( Alphabet(C.Buffer(0) / 8),
-                        Alphabet((C.Buffer(0) mod 8) * 4 + C.Buffer(1) / 64),
-                        Alphabet((C.Buffer(1) mod 64) / 2),
-                        Alphabet((C.Buffer(1) mod 2) * 16 + C.Buffer(2) / 16),
-                        Alphabet((C.Buffer(2) mod 16) * 2 + C.Buffer(3) / 128),
-                        Alphabet((C.Buffer(3) mod 128) / 4),
-                        Alphabet((C.Buffer(3) mod 4) * 8 + 0),
+                        Alphabet((C.Buffer(0) and 2#00000111#) * 4 or C.Buffer(1) / 64),
+                        Alphabet((C.Buffer(1) and 2#00111111#) / 2),
+                        Alphabet((C.Buffer(1) and 2#00000001#) * 16 or C.Buffer(2) / 16),
+                        Alphabet((C.Buffer(2) and 2#00001111#) * 2 or C.Buffer(3) / 128),
+                        Alphabet((C.Buffer(3) and 2#01111111#) / 4),
+                        Alphabet((C.Buffer(3) and 2#00000011#) * 8),
                         Padding,
                         others => ' ');
             Output_Length := 8;
