@@ -77,7 +77,7 @@ package BinToAsc is
       type Codec is new Codec_To_String with private;
    function To_String (Input : in Bin_Array) return String;
 
-   Invalid_Data : exception;
+   Invalid_Data_Encoding : exception;
 
    generic
       type Codec is new Codec_To_Bin with private;

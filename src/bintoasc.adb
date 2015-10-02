@@ -50,13 +50,13 @@ package body BinToAsc is
               Output => Buffer,
               Output_Length => Result_Length);
       if C.State /= Ready then
-         raise Invalid_Data;
+         raise Invalid_Data_Encoding;
       end if;
       Completed(C => C,
                 Output => Buffer(Result_Length + 1 .. Buffer'Last),
                 Output_Length => Tail_Length);
       if C.State /= Completed then
-         raise Invalid_Data;
+         raise Invalid_Data_Encoding;
       end if;
       return Buffer(1 .. Result_Length + Tail_Length);
    end To_Bin;
