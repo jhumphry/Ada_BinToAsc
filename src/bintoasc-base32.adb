@@ -289,7 +289,7 @@ package body BinToAsc.Base32 is
    begin
       if C.Next_Index /= 0 then
          C.State := Failed;
-      else
+      elsif C.State = Ready then
          C.State := Completed;
       end if;
       Output := (others => 0);

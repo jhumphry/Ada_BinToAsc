@@ -159,10 +159,10 @@ package body BinToAsc.Base16 is
                         Output_Length : out Bin_Array_Index)
    is
    begin
-      if C.Loaded = False then
-         C.State := Completed;
-      else
+      if C.Loaded then
          C.State := Failed;
+      elsif C.State = Ready then
+         C.State := Completed;
       end if;
       Output := (others => 0);
       Output_Length := 0;
