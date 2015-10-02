@@ -3,6 +3,7 @@
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
+-- GNAT warns on mod 2 invocations but in this case they are not a mistake
 pragma Warnings (Off, "suspicious *mod* value, was ** intended?");
 
 package body BinToAsc.Base32 is
@@ -157,6 +158,8 @@ package body BinToAsc.Base32 is
          when 4 => 3,
          when 6 => 4,
          when others => 0);
+   -- The Process routines should have caught invalid padding lengths and set
+   -- the status to 'Failed' so the 'others' clause is not a problem here.
 
    procedure Reset (C : out Base32_To_Bin) is
    begin
