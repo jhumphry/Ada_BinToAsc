@@ -15,6 +15,7 @@ project Ada_BinToAsc_External is
 
    for Library_Interface use ("BinToAsc",
                               "BinToAsc.Base16",
+                              "BinToAsc.Base32",
                               "BinToAsc.Base64",
                               "RFC4648"
                              );
