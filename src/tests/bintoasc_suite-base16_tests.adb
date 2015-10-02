@@ -8,6 +8,8 @@ with AUnit.Assertions;
 
 with System.Storage_Elements;
 
+with String_To_Storage_Array;
+
 package body BinToAsc_Suite.Base16_Tests is
 
    use AUnit.Assertions;
@@ -15,6 +17,9 @@ package body BinToAsc_Suite.Base16_Tests is
 
    use RFC4648;
    use type RFC4648.Codec_State;
+
+   function STSA (X : String) return Storage_Array
+                     renames String_To_Storage_Array;
 
    --------------------
    -- Register_Tests --
@@ -43,6 +48,8 @@ package body BinToAsc_Suite.Base16_Tests is
                         "Check Base16 decoder will reject junk input (single character)");
       Register_Routine (T, Check_Incomplete_Group_Rejection'Access,
                         "Check Base16 decoder will reject incomplete groups in input");
+      Register_Routine (T, Check_Case_Insensitive'Access,
+                        "Check Base16_Case_Insensitive decoder will accept mixed-case input");
    end Register_Tests;
 
    ----------
@@ -218,5 +225,31 @@ package body BinToAsc_Suite.Base16_Tests is
       Assert(Base16_Decoder.State = Failed, "Base16 decoder did not complain " &
                "about receiving an incomplete group.");
    end Check_Incomplete_Group_Rejection;
+
+   procedure Check_Case_Insensitive (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced(T);
+
+      Test_Input : constant Storage_Array := STSA("foobar");
+      Encoded : constant String := "666F6F626172";
+      Encoded_Mixed_Case : constant String := "666F6f626172";
+
+      Base16_Decoder : RFC4648.Base16.Base16_To_Bin;
+      Buffer : Storage_Array(1..7);
+      Buffer_Used : Storage_Offset;
+   begin
+      Assert(Test_Input = RFC4648.Base16.To_Bin(Encoded),
+             "Base16 case-sensitive encoder not working");
+
+      Base16_Decoder.Reset;
+      Base16_Decoder.Process(Encoded_Mixed_Case,
+                             Buffer,
+                             Buffer_Used);
+      Assert(Base16_Decoder.State = Failed and Buffer_Used = 0,
+             "Base16 case-sensitive encoder did not reject mixed-case input");
+
+      Assert(Test_Input = RFC4648.Base16_Case_Insensitive.To_Bin(Encoded_Mixed_Case),
+             "Base16 case-insensitive encoder not working");
+
+   end Check_Case_Insensitive;
 
 end BinToAsc_Suite.Base16_Tests;

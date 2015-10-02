@@ -66,4 +66,6 @@ package BinToAsc_Suite.Base16_Tests is
 
    procedure Check_Incomplete_Group_Rejection (T : in out Test_Cases.Test_Case'Class);
 
+   procedure Check_Case_Insensitive (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Base16_Tests;

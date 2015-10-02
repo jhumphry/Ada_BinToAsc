@@ -22,6 +22,9 @@ package RFC4648 is
                                      Case_Sensitive => True);
    package Hex renames Base16;
 
+   package Base16_Case_Insensitive is new BToA.Base16(Alphabet       => Base16_Alphabet,
+                                                      Case_Sensitive => False);
+
    Base32_Alphabet : constant BToA.Alphabet_32 :=
      "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
    package Base32 is new BToA.Base32(Alphabet => Base32_Alphabet,
