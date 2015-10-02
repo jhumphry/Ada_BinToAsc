@@ -100,7 +100,7 @@ package body BinToAsc.Base16 is
          C.State := Failed;
       else
          if C.Loaded then
-            Output(Output'First) := Bin(C.Load) * 16 + Input_Bin;
+            Output(Output'First) := Bin(C.Load) * 16 or Input_Bin;
             Output(Output'First + 1 .. Output'Last) := (others => 0);
             Output_Length := 1;
             C.Loaded := False;
@@ -134,7 +134,7 @@ package body BinToAsc.Base16 is
          end if;
 
          if C.Loaded then
-            Output(Output_Index) := Bin(C.Load) * 16 + Input_Bin;
+            Output(Output_Index) := Bin(C.Load) * 16 or Input_Bin;
             Output_Index := Output_Index + 1;
             C.Loaded := False;
          else

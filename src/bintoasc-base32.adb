@@ -207,10 +207,10 @@ package body BinToAsc.Base32 is
          else
             C.Next_Index := 0;
             Output := ( C.Buffer(0) * 8 + C.Buffer(1) / 4,
-                        (C.Buffer(1) mod 4) * 64 + C.Buffer(2) * 2 + C.Buffer(3) / 16,
-                        (C.Buffer(3) mod 16) * 16 + C.Buffer(4) / 2,
-                        (C.Buffer(4) mod 2) * 128 + C.Buffer(5) * 4 + C.Buffer(6) / 8,
-                        (C.Buffer(6) mod 8) * 32 + C.Buffer(7),
+                        (C.Buffer(1) and 2#00011#) * 64 or C.Buffer(2) * 2 or C.Buffer(3) / 16,
+                        (C.Buffer(3) and 2#01111#) * 16 or C.Buffer(4) / 2,
+                        (C.Buffer(4) and 2#00001#) * 128 or C.Buffer(5) * 4 or C.Buffer(6) / 8,
+                        (C.Buffer(6) and 2#00111#) * 32 or C.Buffer(7),
                         others => 0);
             Output_Length := 5 - Padding_Characters_Effect(C.Padding_Length);
          end if;
@@ -262,10 +262,10 @@ package body BinToAsc.Base32 is
             C.Next_Index := 0;
             Output(Output_Index .. Output_Index + 4) :=
               ( C.Buffer(0) * 8 + C.Buffer(1) / 4,
-                (C.Buffer(1) mod 4) * 64 + C.Buffer(2) * 2 + C.Buffer(3) / 16,
-                (C.Buffer(3) mod 16) * 16 + C.Buffer(4) / 2,
-                (C.Buffer(4) mod 2) * 128 + C.Buffer(5) * 4 + C.Buffer(6) / 8,
-                (C.Buffer(6) mod 8) * 32 + C.Buffer(7));
+                (C.Buffer(1) and 2#00011#) * 64 or C.Buffer(2) * 2 or C.Buffer(3) / 16,
+                (C.Buffer(3) and 2#01111#) * 16 or C.Buffer(4) / 2,
+                (C.Buffer(4) and 2#00001#) * 128 or C.Buffer(5) * 4 or C.Buffer(6) / 8,
+                (C.Buffer(6) and 2#00111#) * 32 or C.Buffer(7));
             Output_Index := Output_Index + 5;
          end if;
 

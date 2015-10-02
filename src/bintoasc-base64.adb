@@ -151,9 +151,9 @@ package body BinToAsc.Base64 is
             C.Next_Index := C.Next_Index + 1;
          else
             C.Next_Index := 0;
-            Output := ( C.Buffer(0) * 4 + C.Buffer(1) / 16,
-                        (C.Buffer(1) mod 16) * 16 + C.Buffer(2) / 4,
-                        (C.Buffer(2) mod 4) * 64 + C.Buffer(3),
+            Output := ( C.Buffer(0) * 4 or C.Buffer(1) / 16,
+                        (C.Buffer(1) and 2#001111#) * 16 or C.Buffer(2) / 4,
+                        (C.Buffer(2) and 2#000011#) * 64 or C.Buffer(3),
                         others => 0);
             Output_Length := 3 - C.Padding_Length;
          end if;
@@ -202,9 +202,9 @@ package body BinToAsc.Base64 is
          else
             C.Next_Index := 0;
             Output(Output_Index .. Output_Index + 2) :=
-              ( C.Buffer(0) * 4 + C.Buffer(1) / 16,
-                (C.Buffer(1) mod 16) * 16 + C.Buffer(2) / 4,
-                (C.Buffer(2) mod 4) * 64 + C.Buffer(3));
+              ( C.Buffer(0) * 4 or C.Buffer(1) / 16,
+                (C.Buffer(1) and 2#001111#) * 16 or C.Buffer(2) / 4,
+                (C.Buffer(2) and 2#000011#) * 64 or C.Buffer(3));
             Output_Index := Output_Index + 3;
          end if;
 
