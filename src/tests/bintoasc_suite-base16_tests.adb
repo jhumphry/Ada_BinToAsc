@@ -226,6 +226,10 @@ package body BinToAsc_Suite.Base16_Tests is
                "about receiving an incomplete group.");
    end Check_Incomplete_Group_Rejection;
 
+   ----------------------------
+   -- Check_Case_Insensitive --
+   ----------------------------
+
    procedure Check_Case_Insensitive (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced(T);
 
@@ -238,17 +242,17 @@ package body BinToAsc_Suite.Base16_Tests is
       Buffer_Used : Storage_Offset;
    begin
       Assert(Test_Input = RFC4648.Base16.To_Bin(Encoded),
-             "Base16 case-sensitive encoder not working");
+             "Base16 case-sensitive decoder not working");
 
       Base16_Decoder.Reset;
       Base16_Decoder.Process(Encoded_Mixed_Case,
                              Buffer,
                              Buffer_Used);
       Assert(Base16_Decoder.State = Failed and Buffer_Used = 0,
-             "Base16 case-sensitive encoder did not reject mixed-case input");
+             "Base16 case-sensitive decoder did not reject mixed-case input");
 
       Assert(Test_Input = RFC4648.Base16_Case_Insensitive.To_Bin(Encoded_Mixed_Case),
-             "Base16 case-insensitive encoder not working");
+             "Base16 case-insensitive decoder not working");
 
    end Check_Case_Insensitive;
 
