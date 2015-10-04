@@ -1,5 +1,5 @@
 -- BinToAsc.Testable
--- Exposure some private internals of BinToAsc for unit testing
+-- Expose some private internals of BinToAsc for unit testing
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
