@@ -36,12 +36,19 @@ begin
    Put("According to this package Base32('foobar') = '");
    Put(Base32.To_String(String_To_Storage_Array("foobar")));
    Put_Line("'");
-
    New_Line;
+
    -- Demonstrate decoding from Base32
    Put_Line("According to RFC4648 Base32^{-1}('MZXW6YTBOI======') = 'foobar'");
    Put("According to this package Base32^{-1}('MZXW6YTBOI======') = '");
    Put(Storage_Array_To_String(Base32.To_Bin("MZXW6YTBOI======")));
+   Put_Line("'");
+   New_Line;
+
+   -- Demonstrate decoding from Base32 with homoglyphs
+   Put_Line("According to RFC4648 with homoglphs permitted Base32^{-1}('MZXW6YTB01======') = 'foobar'");
+   Put("According to this package with homoglphs permitted Base32^{-1}('MZXW6YTB01======') = '");
+   Put(Storage_Array_To_String(Base32_Allow_Homoglyphs.To_Bin("MZXW6YTB01======")));
    Put_Line("'");
    New_Line;
 
@@ -50,8 +57,8 @@ begin
    Put("According to this package Base32Hex('foobar') = '");
    Put(Base32Hex.To_String(String_To_Storage_Array("foobar")));
    Put_Line("'");
-
    New_Line;
+
    -- Demonstrate decoding from Base32Hex
    Put_Line("According to RFC4648 Base32Hex^{-1}('CPNMUOJ1E8======') = 'foobar'");
    Put("According to this package Base32Hex^{-1}('CPNMUOJ1E8======') = '");

@@ -9,8 +9,31 @@ package body BinToAsc.Base32 is
 
    use Ada.Characters.Handling;
 
+   function Make_Base32_Reverse_Alphabet return Reverse_Alphabet_Lookup is
+   begin
+      return R : Reverse_Alphabet_Lookup
+        := Make_Reverse_Alphabet(Alphabet, Case_Sensitive) do
+         if Allow_Homoglyphs then
+            if R('1') = Invalid_Character_Input then
+               if R('l') /= Invalid_Character_Input then
+                  R('1') := R('l');
+               elsif R('I') /= Invalid_Character_Input then
+                  R('1') := R('I');
+               end if;
+            end if;
+            if R('0') = Invalid_Character_Input then
+               if R('O') /= Invalid_Character_Input then
+                  R('0') := R('O');
+                elsif R('o') /= Invalid_Character_Input then
+                  R('0') := R('o');
+               end if;
+            end if;
+         end if;
+      end return;
+   end Make_Base32_Reverse_Alphabet;
+
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
-     := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
+     := Make_Base32_Reverse_Alphabet;
 
    --
    -- Base32_To_String

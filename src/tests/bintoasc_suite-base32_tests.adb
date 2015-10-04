@@ -10,6 +10,8 @@ with Ada.Assertions;
 
 with String_To_Storage_Array;
 
+with BinToAsc.Base32;
+
 package body BinToAsc_Suite.Base32_Tests is
 
    use AUnit.Assertions;
@@ -64,6 +66,8 @@ package body BinToAsc_Suite.Base32_Tests is
                         "Check Base32 decoder will reject junk input (single character)");
       Register_Routine (T, Check_Case_Insensitive'Access,
                         "Check Base32_Case_Insensitive decoder will accept mixed-case input");
+      Register_Routine (T, Check_Homoglyph'Access,
+                        "Check Base32 decoder with Homoglpyh_Allowed set tolerates homoglyphs");
    end Register_Tests;
 
    ----------
@@ -417,5 +421,82 @@ package body BinToAsc_Suite.Base32_Tests is
              "Base32 case-insensitive decoder not working");
 
    end Check_Case_Insensitive;
+
+   ---------------------
+   -- Check_Homoglyph --
+   ---------------------
+
+   procedure Check_Homoglyph (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      package Base32_UC is new
+        RFC4648.BToA.Base32(Alphabet         => Base32_Alphabet,
+                            Padding          => '=',
+                            Case_Sensitive   => True,
+                            Allow_Homoglyphs => True);
+
+      Base32_Alphabet_LC : constant BToA.Alphabet_32 :=
+           "abcdefghijklmnopqrstuvwxyz234567";
+
+      package Base32_LC is new
+        RFC4648.BToA.Base32(Alphabet         => Base32_Alphabet_LC,
+                            Padding          => '=',
+                            Case_Sensitive   => True,
+                            Allow_Homoglyphs => True);
+
+      Binary_Input : Storage_Array(0..255);
+      Encoded_Data : String(1..416);
+      Decoded_Data : Storage_Array(0..255);
+
+   begin
+      for I in Binary_Input'Range loop
+         Binary_Input(I) := Storage_Element(I - Binary_Input'First);
+      end loop;
+
+      Encoded_Data := Base32_UC.To_String(Binary_Input);
+      Assert((for some I of Encoded_Data => I = 'O') and
+               (for some I of Encoded_Data => I = 'I'),
+             "Test data does not contain O or I so upper-case homoglyph test cannot be done");
+
+      for I in Encoded_Data'Range loop
+         case Encoded_Data(I) is
+            when 'O' =>
+               Encoded_Data(I) := '0';
+            when 'I' =>
+               Encoded_Data(I) := '1';
+            when others =>
+               null;
+         end case;
+      end loop;
+
+      Decoded_Data := Base32_UC.To_Bin(Encoded_Data);
+
+      Assert((for all I in Decoded_Data'Range =>
+                Decoded_Data(I) = Storage_Element(I-Decoded_Data'First)),
+             "Encoder / Decoder pair does not tolerate upper-case homoglyphs");
+
+      Encoded_Data := Base32_LC.To_String(Binary_Input);
+      Assert((for some I of Encoded_Data => I = 'o') and
+               (for some I of Encoded_Data => I = 'l'),
+             "Test data does not contain o or l so lower-case homoglyph test cannot be done");
+
+      for I in Encoded_Data'Range loop
+         case Encoded_Data(I) is
+            when 'o' =>
+               Encoded_Data(I) := '0';
+            when 'l' =>
+               Encoded_Data(I) := '1';
+            when others =>
+               null;
+         end case;
+      end loop;
+
+      Decoded_Data := Base32_LC.To_Bin(Encoded_Data);
+
+      Assert((for all I in Decoded_Data'Range =>
+                Decoded_Data(I) = Storage_Element(I-Decoded_Data'First)),
+             "Encoder / Decoder pair does not tolerate lower-case homoglyphs");
+
+   end Check_Homoglyph;
 
 end BinToAsc_Suite.Base32_Tests;

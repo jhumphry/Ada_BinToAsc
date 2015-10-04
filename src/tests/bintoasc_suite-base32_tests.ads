@@ -108,4 +108,6 @@ package BinToAsc_Suite.Base32_Tests is
 
    procedure Check_Case_Insensitive (T : in out Test_Cases.Test_Case'Class);
 
+   procedure Check_Homoglyph (T : in out Test_Cases.Test_Case'Class);
+
 end BinToAsc_Suite.Base32_Tests;
