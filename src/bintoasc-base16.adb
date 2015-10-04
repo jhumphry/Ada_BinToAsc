@@ -90,10 +90,7 @@ package body BinToAsc.Base16 is
    is
       Input_Bin : Bin;
    begin
-         Input_Bin := Reverse_Alphabet(if Case_Sensitive
-                                       then Input
-                                       else To_Lower(Input)
-                                      );
+         Input_Bin := Reverse_Alphabet(Input);
 
       if Input_Bin = Invalid_Character_Input then
          Output_Length := 0;
@@ -123,10 +120,7 @@ package body BinToAsc.Base16 is
    begin
       for I in Input'Range loop
 
-         Input_Bin := Reverse_Alphabet(if Case_Sensitive
-                                       then Input(I)
-                                       else To_Lower(Input(I))
-                                      );
+         Input_Bin := Reverse_Alphabet(Input(I));
 
          if Input_Bin = Invalid_Character_Input then
             C.State := Failed;
