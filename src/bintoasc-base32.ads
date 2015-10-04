@@ -6,6 +6,7 @@
 generic
    Alphabet : Alphabet_32;
    Padding : Character;
+   Case_Sensitive : Boolean;
 package BinToAsc.Base32 is
 
    type Base32_To_String is new Codec_To_String with private;

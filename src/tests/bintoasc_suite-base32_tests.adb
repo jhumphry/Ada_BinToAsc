@@ -8,6 +8,8 @@ with AUnit.Assertions;
 with System.Storage_Elements;
 with Ada.Assertions;
 
+with String_To_Storage_Array;
+
 package body BinToAsc_Suite.Base32_Tests is
 
    use AUnit.Assertions;
@@ -15,6 +17,9 @@ package body BinToAsc_Suite.Base32_Tests is
 
    use RFC4648;
    use type RFC4648.Codec_State;
+
+   function STSA (X : String) return Storage_Array
+                     renames String_To_Storage_Array;
 
    --------------------
    -- Register_Tests --
@@ -57,7 +62,8 @@ package body BinToAsc_Suite.Base32_Tests is
                         "Check Base32 decoder will reject junk input");
       Register_Routine (T, Check_Junk_Rejection_By_Char'Access,
                         "Check Base32 decoder will reject junk input (single character)");
-
+      Register_Routine (T, Check_Case_Insensitive'Access,
+                        "Check Base32_Case_Insensitive decoder will accept mixed-case input");
    end Register_Tests;
 
    ----------
@@ -381,5 +387,35 @@ package body BinToAsc_Suite.Base32_Tests is
              "Base32 decoder completed after a junk input char did " &
                "not return 0 length output.");
    end Check_Junk_Rejection_By_Char;
+
+   ----------------------------
+   -- Check_Case_Insensitive --
+   ----------------------------
+
+   procedure Check_Case_Insensitive (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced(T);
+
+      Test_Input : constant Storage_Array := STSA("foobar");
+      Encoded : constant String := "MZXW6YTBOI======";
+      Encoded_Mixed_Case : constant String := "MZXw6yTBoI======";
+
+      Base32_Decoder : RFC4648.Base32.Base32_To_Bin;
+      Buffer : Storage_Array(1..15);
+      Buffer_Used : Storage_Offset;
+   begin
+      Assert(Test_Input = RFC4648.Base32.To_Bin(Encoded),
+             "Base32 case-sensitive decoder not working");
+
+      Base32_Decoder.Reset;
+      Base32_Decoder.Process(Encoded_Mixed_Case,
+                             Buffer,
+                             Buffer_Used);
+      Assert(Base32_Decoder.State = Failed and Buffer_Used = 0,
+             "Base32 case-sensitive decoder did not reject mixed-case input");
+
+      Assert(Test_Input = RFC4648.Base32_Case_Insensitive.To_Bin(Encoded_Mixed_Case),
+             "Base32 case-insensitive decoder not working");
+
+   end Check_Case_Insensitive;
 
 end BinToAsc_Suite.Base32_Tests;

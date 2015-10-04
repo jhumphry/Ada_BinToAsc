@@ -3,10 +3,14 @@
 
 -- Copyright (c) 2015, James Humphry - see LICENSE file for details
 
+with Ada.Characters.Handling;
+
 package body BinToAsc.Base32 is
 
+   use Ada.Characters.Handling;
+
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
-     := Make_Reverse_Alphabet(Alphabet, True);
+     := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
 
    --
    -- Base32_To_String
@@ -310,10 +314,13 @@ begin
    pragma Warnings (GNATprove, Off, "Compile_Time_Error");
    pragma Compile_Time_Error ((for some X in 1..Alphabet'Last =>
                                  (for some Y in 0..X-1 =>
-                                    Alphabet(Y) = Alphabet(X)
+                                    (Alphabet(Y) = Alphabet(X) or
+                                         (not Case_Sensitive and
+                                              To_Lower(Alphabet(Y)) = To_Lower(Alphabet(X)))
+                                    )
                                  )
                                ),
-                              "Duplicate letter in alphabet for Base64 codec.");
+                              "Duplicate letter in alphabet for Base32 codec.");
    pragma Warnings (GNATprove, On, "Compile_Time_Error");
 
 end BinToAsc.Base32;

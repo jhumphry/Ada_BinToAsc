@@ -27,13 +27,19 @@ package RFC4648 is
 
    Base32_Alphabet : constant BToA.Alphabet_32 :=
      "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-   package Base32 is new BToA.Base32(Alphabet => Base32_Alphabet,
-                                     Padding  => '=');
+   package Base32 is new BToA.Base32(Alphabet       => Base32_Alphabet,
+                                     Padding        => '=',
+                                     Case_Sensitive => True);
+
+   package Base32_Case_Insensitive is new BToA.Base32(Alphabet       => Base32_Alphabet,
+                                                      Padding        => '=',
+                                                      Case_Sensitive => False);
 
    Base32Hex_Alphabet : constant BToA.Alphabet_32 :=
      "0123456789ABCDEFGHIJKLMNOPQRSTUV";
-   package Base32Hex is new BToA.Base32(Alphabet => Base32Hex_Alphabet,
-                                        Padding  => '=');
+   package Base32Hex is new BToA.Base32(Alphabet       => Base32Hex_Alphabet,
+                                        Padding        => '=',
+                                        Case_Sensitive => True);
 
    Base64_Alphabet : constant BToA.Alphabet_64 :=
      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
