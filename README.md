@@ -54,6 +54,24 @@ complete the coding or decoding, call the `Complete` procedure which
 will potentially output any remaining data received but not converted
 by the `Codec`, together with any padding required.
 
+## Variants supported
+
+There have been many varieties of Base64 and similar codecs used in
+products and protocols. The main focus of this project is the variants
+suggested by RFC4648. Both `Base16` and `Base32` can be instantiated in
+case-sensitive or case-insensitive variants.
+
+In addition, `Base32` also has an option to allow homoglyphs. When
+activated, the character '0' in input will be interpreted as 'o' or 'O',
+if the supplied alphabet does not already assign a base-32 digit to
+'0' but does to 'o' or 'O', and the character '1' will be interpreted
+as 'l' or 'I' likewise. This can be useful where Base32 data may be
+typed manually from a print-out, as in some typefaces these characters
+are so visually similar that they are hard to distinguish.
+
+Some `Base64` decoders will ignore junk characters or incorrect padding
+etc. Currently this is not supported.
+
 ## Build process and tests
 
 Three `gprbuild` project files are included. `ada_bintoasc.gpr`
