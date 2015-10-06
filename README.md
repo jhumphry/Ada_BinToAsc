@@ -72,6 +72,16 @@ are so visually similar that they are hard to distinguish.
 Some `Base64` decoders will ignore junk characters or incorrect padding
 etc. Currently this is not supported.
 
+There is also some support for Base85. Currently the only supported
+variant is the ZeroMQ [Z85](http://rfc.zeromq.org/spec:32)
+specification. A slight extension has been implemented to cope with
+variable length input. The last few bytes of input that is not a
+multiple of four bytes in length are padded with zero before being
+converted to a group of five characters as usual. The number of
+characters actually output in the last group is reduced by the number
+of padding bytes added. This maintains compatibility with standard Z85
+and is fully reversible.
+
 ## Build process and tests
 
 Three `gprbuild` project files are included. `ada_bintoasc.gpr`
