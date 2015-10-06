@@ -47,20 +47,20 @@ package BinToAsc.Base85 is
                       Input : in Character;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length >= 0 and Output_Length <= 3);
+     with Post => (Output_Length = 0 or Output_Length = 4);
 
    procedure Process (C : in out Base85_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
-     with Post => ((Output_Length / 3 >= Input'Length / 4 - 1 and
-                       Output_Length / 3 <= Input'Length / 4 + 1) or
+     with Post => ((Output_Length / 4 >= Input'Length / 5 - 1 and
+                       Output_Length / 4 <= Input'Length / 5 + 1) or
                          C.State = Failed);
 
    procedure Completed (C : in out Base85_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length = 0);
+     with Post => (Output_Length < 4);
 
    function To_Bin (Input : in String) return Bin_Array;
 
