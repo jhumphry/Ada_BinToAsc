@@ -7,6 +7,7 @@ with BinToAsc_Suite.Misc_Tests;
 with BinToAsc_Suite.Base16_Tests;
 with BinToAsc_Suite.Base32_Tests;
 with BinToAsc_Suite.Base64_Tests;
+with BinToAsc_Suite.Base85_Tests;
 
 package body BinToAsc_Suite is
    use AUnit.Test_Suites;
@@ -17,6 +18,7 @@ package body BinToAsc_Suite is
    Test_Base16 : aliased Base16_Tests.Base16_Test;
    Test_Base32 : aliased Base32_Tests.Base32_Test;
    Test_Base64 : aliased Base64_Tests.Base64_Test;
+   Test_Base85 : aliased Base85_Tests.Base85_Test;
 
    -----------
    -- Suite --
@@ -28,6 +30,7 @@ package body BinToAsc_Suite is
       Add_Test (Result'Access, Test_Base16'Access);
       Add_Test (Result'Access, Test_Base32'Access);
       Add_Test (Result'Access, Test_Base64'Access);
+      Add_Test (Result'Access, Test_Base85'Access);
       return Result'Access;
    end Suite;
 
