@@ -25,6 +25,11 @@ package BinToAsc_Suite.Base85_Tests is
                                              Codec_To_String => ASCII85.Z85.Base85_To_String,
                                              Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin);
 
+   procedure Check_Z85_Length is
+     new BinToAsc_Suite.Utils.Check_Length(BToA            => ASCII85.BToA,
+                                           Codec_To_String => ASCII85.Z85.Base85_To_String,
+                                           Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin);
+
    procedure Check_Z85_Test_Vector (T : in out Test_Cases.Test_Case'Class);
 
 end BinToAsc_Suite.Base85_Tests;

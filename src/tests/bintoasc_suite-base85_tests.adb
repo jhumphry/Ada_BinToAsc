@@ -29,6 +29,8 @@ package body BinToAsc_Suite.Base85_Tests is
    begin
       Register_Routine (T, Check_Z85_Symmetry'Access,
                         "Check the Z85 Encoder and Decoder are a symmetrical pair");
+      Register_Routine (T, Check_Z85_Length'Access,
+                        "Check the Z85 Encoder and Decoder handle variable-length input successfully");
       Register_Routine (T, Check_Z85_Test_Vector'Access,
                         "Check Z85 test vector can be encoded/decoded successfully");
    end Register_Tests;

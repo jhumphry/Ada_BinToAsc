@@ -55,6 +55,57 @@ package body BinToAsc_Suite.Utils is
       end;
    end Check_Symmetry;
 
+   ------------------
+   -- Check_Length --
+   ------------------
+
+   procedure Check_Length (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced(T);
+
+      use type BToA.Bin;
+      use type BToA.Bin_Array_Index;
+
+      function Bin_To_String is
+        new BToA.To_String(Codec => Codec_To_String);
+
+      function String_To_Bin is
+        new BToA.To_Bin(Codec => Codec_To_Bin);
+
+      All_One : constant BToA.Bin_Array(0..31) := (others => BToA.Bin'Last);
+      All_Zero : constant BToA.Bin_Array(0..31) := (others => 0);
+
+   begin
+      for I in 1..32 loop
+         declare
+            Encoded_One : constant String
+              := Bin_To_String(All_One(0..BToA.Bin_Array_Index(I-1)));
+            Decoded_One : constant BToA.Bin_Array := String_To_Bin(Encoded_One);
+            Encoded_Zero : constant String
+              := Bin_To_String(All_Zero(0..BToA.Bin_Array_Index(I-1)));
+            Decoded_Zero : constant BToA.Bin_Array := String_To_Bin(Encoded_Zero);
+         begin
+            Assert(Decoded_One'Length = I,
+                   "Encoder / Decoder pair changes the length " &
+                     Integer'Image(I) &
+                     " of the data for 'all ones' input");
+            Assert((for all I in Decoded_One'Range =>
+                      Decoded_One(I) = BToA.Bin'Last),
+                   "Encoder / Decoder are not a symmetric pair for length " &
+                     Integer'Image(I) &
+                     " for 'all ones' input");
+            Assert(Decoded_Zero'Length = I,
+                   "Encoder / Decoder pair changes the length " &
+                     Integer'Image(I) &
+                     " of the data for 'all zeros' input");
+            Assert((for all I in Decoded_Zero'Range =>
+                      Decoded_Zero(I) = 0),
+                   "Encoder / Decoder are not a symmetric pair for length " &
+                     Integer'Image(I) &
+                     " for 'all zeros' input");
+         end;
+      end loop;
+   end Check_Length;
+
    ----------------------------------
    -- Check_Test_Vectors_To_String --
    ----------------------------------

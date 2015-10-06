@@ -33,6 +33,11 @@ package BinToAsc_Suite.Base16_Tests is
                                              Codec_To_String => RFC4648.Base16.Base16_To_String,
                                              Codec_To_Bin    => RFC4648.Base16.Base16_To_Bin);
 
+   procedure Check_Length is
+     new BinToAsc_Suite.Utils.Check_Length(BToA            => RFC4648.BToA,
+                                           Codec_To_String => RFC4648.Base16.Base16_To_String,
+                                           Codec_To_Bin    => RFC4648.Base16.Base16_To_Bin);
+
    procedure Check_Test_Vectors_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_String(Test_Vectors => Base16_Test_Vectors,
                                                            Codec_To_String => RFC4648.Base16.Base16_To_String);

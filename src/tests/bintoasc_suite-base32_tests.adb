@@ -32,6 +32,8 @@ package body BinToAsc_Suite.Base32_Tests is
    begin
       Register_Routine (T, Check_Symmetry'Access,
                         "Check the Base32 Encoder and Decoder are a symmetrical pair");
+      Register_Routine (T, Check_Length'Access,
+                        "Check the Encoder and Decoder handle variable-length input successfully");
       Register_Routine (T, Check_Symmetry_Hex'Access,
                         "Check the Base32Hex Encoder and Decoder are a symmetrical pair");
       Register_Routine (T, Check_Test_Vectors_To_String'Access,

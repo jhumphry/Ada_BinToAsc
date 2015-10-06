@@ -41,6 +41,11 @@ package BinToAsc_Suite.Base32_Tests is
                                              Codec_To_String => RFC4648.Base32.Base32_To_String,
                                              Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin);
 
+   procedure Check_Length is
+     new BinToAsc_Suite.Utils.Check_Length(BToA            => RFC4648.BToA,
+                                           Codec_To_String => RFC4648.Base32.Base32_To_String,
+                                           Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin);
+
    procedure Check_Symmetry_Hex is
      new BinToAsc_Suite.Utils.Check_Symmetry(BToA            => RFC4648.BToA,
                                              Codec_To_String => RFC4648.Base32Hex.Base32_To_String,
