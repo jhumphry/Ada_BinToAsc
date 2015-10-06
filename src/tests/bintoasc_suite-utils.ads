@@ -6,13 +6,15 @@
 with AUnit; use AUnit;
 with AUnit.Test_Cases; use AUnit.Test_Cases;
 
+with BinToAsc;
 with RFC4648;
 
 package BinToAsc_Suite.Utils is
 
    generic
-      type Codec_To_String is new RFC4648.BToA.Codec_To_String with private;
-      type Codec_To_Bin is new RFC4648.BToA.Codec_To_Bin with private;
+      with package BToA is new BinToAsc(<>);
+      type Codec_To_String is new BToA.Codec_To_String with private;
+      type Codec_To_Bin is new BToA.Codec_To_Bin with private;
    procedure Check_Symmetry (T : in out Test_Cases.Test_Case'Class);
 
    generic

@@ -27,27 +27,30 @@ package body BinToAsc_Suite.Utils is
    procedure Check_Symmetry (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced(T);
 
+      use type BToA.Bin;
+      use type BToA.Bin_Array_Index;
+
       function Bin_To_String is
-        new RFC4648.BToA.To_String(Codec => Codec_To_String);
+        new BToA.To_String(Codec => Codec_To_String);
 
       function String_To_Bin is
-        new RFC4648.BToA.To_Bin(Codec => Codec_To_Bin);
+        new BToA.To_Bin(Codec => Codec_To_Bin);
 
-      Binary_Input : Storage_Array(0..255);
+      Binary_Input : BToA.Bin_Array(0..255);
 
    begin
       for I in Binary_Input'Range loop
-         Binary_Input(I) := Storage_Element(I - Binary_Input'First);
+         Binary_Input(I) := BToA.Bin(I - Binary_Input'First);
       end loop;
 
       declare
          Encoded_Data : constant String := Bin_To_String(Binary_Input);
-         Decoded_Data : constant Storage_Array := String_To_Bin(Encoded_Data);
+         Decoded_Data : constant BToA.Bin_Array := String_To_Bin(Encoded_Data);
       begin
          Assert(Decoded_Data'Length = 256,
                 "Encoder / Decoder pair changes the length of the data");
          Assert((for all I in Decoded_Data'Range =>
-                   Decoded_Data(I) = Storage_Element(I-Decoded_Data'First)),
+                   Decoded_Data(I) = BToA.Bin(I-Decoded_Data'First)),
                 "Encoder / Decoder are not a symmetric pair");
       end;
    end Check_Symmetry;
