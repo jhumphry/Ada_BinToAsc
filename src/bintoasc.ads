@@ -107,6 +107,7 @@ package BinToAsc is
    subtype Alphabet_16 is Alphabet(0..15);
    subtype Alphabet_32 is Alphabet(0..31);
    subtype Alphabet_64 is Alphabet(0..63);
+   subtype Alphabet_85 is Alphabet(0..84);
 
 private
 

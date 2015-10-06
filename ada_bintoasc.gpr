@@ -15,7 +15,9 @@ project Ada_BinToAsc is
                               "BinToAsc.Base16",
                               "BinToAsc.Base32",
                               "BinToAsc.Base64",
-                              "RFC4648"
+                              "BinToAsc.Base85",
+                              "RFC4648",
+                              "ASCII85"
                              );
 
    for Source_Dirs use ("src/");
