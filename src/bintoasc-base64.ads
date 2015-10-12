@@ -10,18 +10,23 @@ package BinToAsc.Base64 is
 
    type Base64_To_String is new Codec_To_String with private;
 
+   overriding
    procedure Reset (C : out Base64_To_String);
 
+   overriding
    function Input_Group_Size (C : in Base64_To_String) return Positive is (3);
 
+   overriding
    function Output_Group_Size (C : in Base64_To_String) return Positive is (4);
 
+   overriding
    procedure Process (C : in out Base64_To_String;
                       Input : in Bin;
                       Output : out String;
                       Output_Length : out Natural)
      with Post => (Output_Length = 0 or Output_Length = 4);
 
+   overriding
    procedure Process (C : in out Base64_To_String;
                       Input : in Bin_Array;
                       Output : out String;
@@ -29,6 +34,7 @@ package BinToAsc.Base64 is
      with Post => (Output_Length / 4 = Input'Length / 3 or
                      Output_Length / 4 = Input'Length / 3 + 1);
 
+   overriding
    procedure Complete (C : in out Base64_To_String;
                         Output : out String;
                         Output_Length : out Natural)
@@ -38,18 +44,23 @@ package BinToAsc.Base64 is
 
    type Base64_To_Bin is new Codec_To_Bin with private;
 
+   overriding
    procedure Reset (C : out Base64_To_Bin);
 
+   overriding
    function Input_Group_Size (C : in Base64_To_Bin) return Positive is (4);
 
+   overriding
    function Output_Group_Size (C : in Base64_To_Bin) return Positive is (3);
 
+   overriding
    procedure Process (C : in out Base64_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index)
      with Post => (Output_Length >= 0 and Output_Length <= 3);
 
+   overriding
    procedure Process (C : in out Base64_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
@@ -64,6 +75,7 @@ package BinToAsc.Base64 is
    -- some partially decoded data, the number of output groups can be one more
    -- than otherwise expected.
 
+   overriding
    procedure Complete (C : in out Base64_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)

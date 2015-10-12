@@ -37,6 +37,7 @@ package BinToAsc is
 
    type Codec_To_String is abstract new Codec with null record;
 
+   not overriding
    procedure Process (C : in out Codec_To_String;
                       Input : in Bin;
                       Output : out String;
@@ -44,6 +45,7 @@ package BinToAsc is
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C));
 
+   not overriding
    procedure Process (C : in out Codec_To_String;
                       Input : in Bin_Array;
                       Output : out String;
@@ -52,6 +54,7 @@ package BinToAsc is
                           Output'Length / Output_Group_Size(C) >=
                             Input'Length / Input_Group_Size(C) + 1);
 
+   not overriding
    procedure Complete (C : in out Codec_To_String;
                         Output : out String;
                         Output_Length : out Natural) is abstract
@@ -61,6 +64,7 @@ package BinToAsc is
 
    type Codec_To_Bin is abstract new Codec with null record;
 
+   not overriding
    procedure Process (C : in out Codec_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
@@ -68,6 +72,7 @@ package BinToAsc is
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C));
 
+   not overriding
    procedure Process (C : in out Codec_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
@@ -76,6 +81,7 @@ package BinToAsc is
                           Output'Length / Output_Group_Size(C) >=
                             Input'Length / Input_Group_Size(C) + 1);
 
+   not overriding
    procedure Complete (C : in out Codec_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index) is abstract
