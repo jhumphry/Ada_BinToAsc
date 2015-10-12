@@ -6,6 +6,7 @@
 with AUnit.Assertions;
 
 with System.Storage_Elements;
+with Ada.Assertions;
 
 with Storage_Array_To_Hex_String;
 
@@ -37,6 +38,8 @@ package body BinToAsc_Suite.Base85_Tests is
                         "Check Z85 test vector can be encoded/decoded incrementally by byte/char");
       Register_Routine (T, Check_Z85_Junk_Rejection'Access,
                         "Check Z85 rejects junk chars");
+      Register_Routine (T, Check_Z85_High_Group'Access,
+                        "Check Z85 correctly decodes strings that represent values around 2**32");
    end Register_Tests;
 
    ----------
@@ -171,6 +174,18 @@ package body BinToAsc_Suite.Base85_Tests is
       Assert(Z85_Decoder.State = Failed,
              "Z85 decoder failed to reject junk input");
 
+      begin
+         Z85_Decoder.Complete(Output => Buffer_Bin,
+                              Output_Length => Buffer_Used
+                             );
+      exception
+         when Ada.Assertions.Assertion_Error =>
+            null; -- Preconditions (if active) will not allow Completed to be run
+                  -- on a codec with state /= Ready.
+      end;
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder in failed state was reset by the Complete routine");
+
       Z85_Decoder.Reset;
       Z85_Decoder.Process(Input => "Hel",
                           Output => Buffer_Bin,
@@ -200,5 +215,110 @@ package body BinToAsc_Suite.Base85_Tests is
              "Z85 decoder failed to reject junk input when introduced incrementally as a character");
 
    end Check_Z85_Junk_Rejection;
+
+   --------------------------
+   -- Check_Z85_High_Group --
+   --------------------------
+
+   procedure Check_Z85_High_Group (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Z85_Decoder : Z85.Base85_To_Bin;
+      Buffer_Bin: Storage_Array(1..12);
+      Buffer_Used : Storage_Offset := 0;
+
+   begin
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "@####",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected @#### which is a valid group");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%####",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject %#### which is a valid group (more than 2**32)");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSc0",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected @nSb0 which is the highest valid group");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSc1",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject @nSb1 which is the lowest invalid group");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSc",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Z85_Decoder.Process(Input => '0',
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected @nSb0 which is the highest valid group " &
+            "when the last character was presented separately");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSc",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Z85_Decoder.Process(Input => '1',
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject @nSb1 which is the lowest invalid group " &
+            "when the last character was presented separately");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSb",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected %nSb which could be the start of a valid group");
+      Z85_Decoder.Complete(Output => Buffer_Bin,
+                           Output_Length => Buffer_Used
+                          );
+      Assert(Z85_Decoder.State = Complete,
+             "Z85 decoder rejected %nSb at the end of input which is a valid group");
+      Assert(Buffer_Used = 3,
+             "Z85 decoder returned wrong length from %nSb at the end of input " &
+             "(three FF bytes");
+      Assert(Buffer_Bin(1..3) = (16#FF#, 16#FF#, 16#FF#),
+             "Z85 decoder did not correctly decode %nSb at the end of input " &
+             "(three FF bytes");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "%nSc",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected %nSc which could be the start of a valid group");
+      Z85_Decoder.Complete(Output => Buffer_Bin,
+                           Output_Length => Buffer_Used
+                          );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder did not reject %nSc at the end of input which is a invalid group");
+
+   end Check_Z85_High_Group;
 
 end BinToAsc_Suite.Base85_Tests;
