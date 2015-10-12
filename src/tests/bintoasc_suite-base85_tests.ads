@@ -34,5 +34,6 @@ package BinToAsc_Suite.Base85_Tests is
    procedure Check_Z85_Test_Vector_By_Char (T : in out Test_Cases.Test_Case'Class);
    procedure Check_Z85_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
    procedure Check_Z85_High_Group (T : in out Test_Cases.Test_Case'Class);
+   procedure Check_Z85_Length_Rejection (T : in out Test_Cases.Test_Case'Class);
 
 end BinToAsc_Suite.Base85_Tests;

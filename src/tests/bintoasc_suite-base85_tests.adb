@@ -40,6 +40,8 @@ package body BinToAsc_Suite.Base85_Tests is
                         "Check Z85 rejects junk chars");
       Register_Routine (T, Check_Z85_High_Group'Access,
                         "Check Z85 correctly decodes strings that represent values around 2**32");
+      Register_Routine (T, Check_Z85_Length_Rejection'Access,
+                        "Check Z85 decoder rejects final character group of length 1");
    end Register_Tests;
 
    ----------
@@ -320,5 +322,42 @@ package body BinToAsc_Suite.Base85_Tests is
              "Z85 decoder did not reject %nSc at the end of input which is a invalid group");
 
    end Check_Z85_High_Group;
+
+   --------------------------------
+   -- Check_Z85_Length_Rejection --
+   --------------------------------
+
+   procedure Should_Raise_Exception_From_Length is
+      Discard : Storage_Array(1..8);
+   begin
+      Discard  := Z85.To_Bin("HelloW");
+   end;
+
+   procedure Check_Z85_Length_Rejection (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Z85_Decoder : Z85.Base85_To_Bin;
+      Buffer_Bin: Storage_Array(1..12);
+      Buffer_Used : Storage_Offset := 0;
+
+   begin
+
+      Assert_Exception(Should_Raise_Exception_From_Length'Access,
+                       "Z85 decoder did not reject impossible 6-character input.");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "HelloW",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejected 6-character input too early");
+      Z85_Decoder.Complete(Output => Buffer_Bin,
+                           Output_Length => Buffer_Used
+                          );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject an impossible final input of 1 character");
+
+   end Check_Z85_Length_Rejection;
 
 end BinToAsc_Suite.Base85_Tests;
