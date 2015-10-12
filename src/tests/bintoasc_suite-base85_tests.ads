@@ -31,5 +31,7 @@ package BinToAsc_Suite.Base85_Tests is
                                            Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin);
 
    procedure Check_Z85_Test_Vector (T : in out Test_Cases.Test_Case'Class);
+   procedure Check_Z85_Test_Vector_By_Char (T : in out Test_Cases.Test_Case'Class);
+   procedure Check_Z85_Junk_Rejection (T : in out Test_Cases.Test_Case'Class);
 
 end BinToAsc_Suite.Base85_Tests;

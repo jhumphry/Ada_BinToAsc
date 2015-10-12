@@ -33,6 +33,10 @@ package body BinToAsc_Suite.Base85_Tests is
                         "Check the Z85 Encoder and Decoder handle variable-length input successfully");
       Register_Routine (T, Check_Z85_Test_Vector'Access,
                         "Check Z85 test vector can be encoded/decoded successfully");
+      Register_Routine (T, Check_Z85_Test_Vector_By_Char'Access,
+                        "Check Z85 test vector can be encoded/decoded incrementally by byte/char");
+      Register_Routine (T, Check_Z85_Junk_Rejection'Access,
+                        "Check Z85 rejects junk chars");
    end Register_Tests;
 
    ----------
@@ -54,9 +58,9 @@ package body BinToAsc_Suite.Base85_Tests is
       null;
    end Set_Up;
 
-   --------------------------
-   -- Check_Junk_Rejection --
-   --------------------------
+   ---------------------------
+   -- Check_Z85_Test_Vector --
+   ---------------------------
 
    procedure Check_Z85_Test_Vector (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
@@ -69,14 +73,132 @@ package body BinToAsc_Suite.Base85_Tests is
 
    begin
       Assert(Z85.To_String(Z85_Test_Vector) = Z85_Encoded,
-             "Z85 encoded on test vector produced " &
+             "Z85 encoder on test vector produced " &
                Z85.To_String(Z85_Test_Vector) &
                " rather than 'HelloWorld'");
       Assert(Z85.To_Bin(Z85_Encoded) = Z85_Test_Vector,
-             "Z85 decoded on test vector produced " &
+             "Z85 decoder on test vector produced " &
                SATHS(Z85.To_Bin(Z85_Encoded)) &
                " rather than " &
                SATHS(Z85_Test_Vector));
    end Check_Z85_Test_Vector;
+
+   -----------------------------------
+   -- Check_Z85_Test_Vector_By_Char --
+   -----------------------------------
+
+   procedure Check_Z85_Test_Vector_By_Char (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Z85_Test_Vector : constant Storage_Array :=
+     (16#86#, 16#4F#, 16#D2#, 16#6F#,
+      16#B5#, 16#59#, 16#F7#, 16#5B#);
+
+      Z85_Encoded : constant String := "HelloWorld";
+
+   begin
+      declare
+         Z85_Encoder : Z85.Base85_To_String;
+         Buffer_String : String(1..15);
+         Buffer_Index : Integer := 1;
+         Buffer_Used : Integer := 0;
+      begin
+         Z85_Encoder.Reset;
+         for I of Z85_Test_Vector loop
+            Z85_Encoder.Process(Input => I,
+                                Output => Buffer_String(Buffer_Index..Buffer_String'Last),
+                                Output_Length => Buffer_Used);
+            Buffer_Index := Buffer_Index + Buffer_Used;
+         end loop;
+         Z85_Encoder.Complete(Output => Buffer_String(Buffer_Index..Buffer_String'Last),
+                              Output_Length => Buffer_Used);
+         Buffer_Index := Buffer_Index + Buffer_Used;
+         Assert(Buffer_String(1..Buffer_Index-1) = Z85_Encoded,
+                "Z85 Encoder on test vector gave the wrong result when used " &
+                  "character-by-character");
+      end;
+
+      declare
+         Z85_Decoder : Z85.Base85_To_Bin;
+         Buffer_Bin: Storage_Array(1..12);
+         Buffer_Index : Storage_Offset := 1;
+         Buffer_Used : Storage_Offset := 0;
+      begin
+         Z85_Decoder.Reset;
+         for I of Z85_Encoded loop
+            Z85_Decoder.Process(Input => I,
+                                Output => Buffer_Bin(Buffer_Index..Buffer_Bin'Last),
+                                Output_Length => Buffer_Used);
+            Buffer_Index := Buffer_Index + Buffer_Used;
+         end loop;
+         Z85_Decoder.Completed(Output => Buffer_Bin(Buffer_Index..Buffer_Bin'Last),
+                              Output_Length => Buffer_Used);
+         Buffer_Index := Buffer_Index + Buffer_Used;
+         Assert(Buffer_Bin(1..Buffer_Index-1) = Z85_Test_Vector,
+                "Z85 Decoder on test vector gave the wrong result when used " &
+                  "byte-by-byte");
+      end;
+
+   end Check_Z85_Test_Vector_By_Char;
+
+   ------------------------------
+   -- Check_Z85_Junk_Rejection --
+   ------------------------------
+
+   procedure Should_Raise_Exception_From_Junk is
+      Discard : Storage_Array(1..8);
+   begin
+      Discard  := Z85.To_Bin("Hel\oWorld");
+   end;
+
+   procedure Check_Z85_Junk_Rejection (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      Z85_Decoder : Z85.Base85_To_Bin;
+      Buffer_Bin: Storage_Array(1..12);
+      Buffer_Used : Storage_Offset := 0;
+
+   begin
+
+      Assert_Exception(Should_Raise_Exception_From_Junk'Access,
+                       "Z85 decoder did not reject junk input.");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "Hel\oWorld",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject junk input");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "Hel",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejecting valid input");
+      Z85_Decoder.Process(Input => "\oWorld",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject junk input when introduced incrementally");
+
+      Z85_Decoder.Reset;
+      Z85_Decoder.Process(Input => "Hel",
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Ready,
+             "Z85 decoder rejecting valid input");
+      Z85_Decoder.Process(Input => '\',
+                          Output => Buffer_Bin,
+                          Output_Length => Buffer_Used
+                         );
+      Assert(Z85_Decoder.State = Failed,
+             "Z85 decoder failed to reject junk input when introduced incrementally as a character");
+
+   end Check_Z85_Junk_Rejection;
 
 end BinToAsc_Suite.Base85_Tests;
