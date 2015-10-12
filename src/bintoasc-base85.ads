@@ -57,7 +57,7 @@ package BinToAsc.Base85 is
                        Output_Length / 4 <= Input'Length / 5 + 1) or
                          C.State = Failed);
 
-   procedure Completed (C : in out Base85_To_Bin;
+   procedure Complete (C : in out Base85_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
      with Post => (Output_Length < 4);

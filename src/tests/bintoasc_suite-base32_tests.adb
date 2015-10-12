@@ -170,7 +170,7 @@ package body BinToAsc_Suite.Base32_Tests is
       Base32_Decoder.Process(Input => "MZXW6YTBOI=====",
                              Output => Result_Bin,
                              Output_Length => Result_Length);
-      Base32_Decoder.Completed(Output => Result_Bin,
+      Base32_Decoder.Complete(Output => Result_Bin,
                              Output_Length => Result_Length);
       Assert(Base32_Decoder.State = Failed or Result_Length /= 0,
              "Base32 decoder did not reject inadequate padding");
@@ -179,7 +179,7 @@ package body BinToAsc_Suite.Base32_Tests is
       Base32_Decoder.Process(Input => "MZXW6YTBOI",
                              Output => Result_Bin,
                              Output_Length => Result_Length);
-      Base32_Decoder.Completed(Output => Result_Bin,
+      Base32_Decoder.Complete(Output => Result_Bin,
                              Output_Length => Result_Length);
       Assert(Base32_Decoder.State = Failed or Result_Length /= 0,
              "Base32 decoder did not reject inadequate padding");
@@ -319,7 +319,7 @@ package body BinToAsc_Suite.Base32_Tests is
                "not return 0 length output.");
 
       begin
-         Base32_Decoder.Completed(Output => Result_Bin,
+         Base32_Decoder.Complete(Output => Result_Bin,
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
@@ -377,7 +377,7 @@ package body BinToAsc_Suite.Base32_Tests is
                "not return 0 length output.");
 
       begin
-         Base32_Decoder.Completed(Output => Result_Bin,
+         Base32_Decoder.Complete(Output => Result_Bin,
                                   Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>

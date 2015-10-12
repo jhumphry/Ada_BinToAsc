@@ -126,7 +126,7 @@ package body BinToAsc_Suite.Base16_Tests is
                "not return 0 length output.");
 
       begin
-         Base16_Decoder.Completed(Output => Result_Bin,
+         Base16_Decoder.Complete(Output => Result_Bin,
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
@@ -184,7 +184,7 @@ package body BinToAsc_Suite.Base16_Tests is
                "not return 0 length output.");
 
       begin
-         Base16_Decoder.Completed(Output => Result_Bin,
+         Base16_Decoder.Complete(Output => Result_Bin,
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
@@ -221,7 +221,7 @@ package body BinToAsc_Suite.Base16_Tests is
                              Output => Result_Bin,
                              Output_Length => Result_Length);
 
-      Base16_Decoder.Completed(Output => Result_Bin,
+      Base16_Decoder.Complete(Output => Result_Bin,
                                Output_Length => Result_Length);
 
       Assert(Base16_Decoder.State = Failed, "Base16 decoder did not complain " &

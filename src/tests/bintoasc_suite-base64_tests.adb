@@ -146,7 +146,7 @@ package body BinToAsc_Suite.Base64_Tests is
       Base64_Decoder.Process(Input => "Zm9vYg=",
                              Output => Result_Bin,
                              Output_Length => Result_Length);
-      Base64_Decoder.Completed(Output => Result_Bin,
+      Base64_Decoder.Complete(Output => Result_Bin,
                              Output_Length => Result_Length);
       Assert(Base64_Decoder.State = Failed or Result_Length /= 0,
              "Base64 decoder did not reject inadequate padding");
@@ -155,7 +155,7 @@ package body BinToAsc_Suite.Base64_Tests is
       Base64_Decoder.Process(Input => "Zm9vYg",
                              Output => Result_Bin,
                              Output_Length => Result_Length);
-      Base64_Decoder.Completed(Output => Result_Bin,
+      Base64_Decoder.Complete(Output => Result_Bin,
                              Output_Length => Result_Length);
       Assert(Base64_Decoder.State = Failed or Result_Length /= 0,
              "Base64 decoder did not reject inadequate padding");
@@ -259,7 +259,7 @@ package body BinToAsc_Suite.Base64_Tests is
                "not return 0 length output.");
 
       begin
-         Base64_Decoder.Completed(Output => Result_Bin,
+         Base64_Decoder.Complete(Output => Result_Bin,
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>
@@ -317,7 +317,7 @@ package body BinToAsc_Suite.Base64_Tests is
                "not return 0 length output.");
 
       begin
-         Base64_Decoder.Completed(Output => Result_Bin,
+         Base64_Decoder.Complete(Output => Result_Bin,
                                 Output_Length => Result_Length);
       exception
          when Ada.Assertions.Assertion_Error =>

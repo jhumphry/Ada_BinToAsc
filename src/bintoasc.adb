@@ -52,7 +52,7 @@ package body BinToAsc is
       if C.State /= Ready then
          raise Invalid_Data_Encoding;
       end if;
-      Completed(C => C,
+      Complete(C => C,
                 Output => Buffer(Result_Length + 1 .. Buffer'Last),
                 Output_Length => Tail_Length);
       if C.State /= Completed then

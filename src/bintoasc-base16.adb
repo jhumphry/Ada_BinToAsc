@@ -148,7 +148,7 @@ package body BinToAsc.Base16 is
 
    end Process;
 
-   procedure Completed (C : in out Base16_To_Bin;
+   procedure Complete (C : in out Base16_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
    is
@@ -160,7 +160,7 @@ package body BinToAsc.Base16 is
       end if;
       Output := (others => 0);
       Output_Length := 0;
-   end Completed;
+   end Complete;
 
    function To_Bin_Private is new BinToAsc.To_Bin(Codec => Base16_To_Bin);
 

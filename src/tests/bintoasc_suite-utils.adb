@@ -251,7 +251,7 @@ package body BinToAsc_Suite.Utils is
                end if;
             end loop;
 
-            BinToAsc_Decoder.Completed(Output => Buffer_Bin,
+            BinToAsc_Decoder.Complete(Output => Buffer_Bin,
                                        Output_Length => Buffer_Bin_Used);
             Assert (Buffer_Bin_Used = 0,
                     "BinToAsc decoder should not generate output on " &
@@ -369,7 +369,7 @@ package body BinToAsc_Suite.Utils is
                end if;
             end loop;
 
-            BinToAsc_Decoder.Completed(Output => Buffer_Bin,
+            BinToAsc_Decoder.Complete(Output => Buffer_Bin,
                                        Output_Length => Buffer_Bin_Used);
 
             Assert (Buffer_Bin_Used = 0,

@@ -58,7 +58,7 @@ package BinToAsc.Base16 is
                      Output_Length = Input'Length / 2 + 1 or
                        C.State = Failed);
 
-   procedure Completed (C : in out Base16_To_Bin;
+   procedure Complete (C : in out Base16_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
      with Post => (Output_Length = 0);

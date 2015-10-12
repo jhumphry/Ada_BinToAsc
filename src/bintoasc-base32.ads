@@ -66,7 +66,7 @@ package BinToAsc.Base32 is
    -- some partially decoded data, the number of output groups can be one more
    -- than otherwise expected.
 
-   procedure Completed (C : in out Base32_To_Bin;
+   procedure Complete (C : in out Base32_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
      with Post => (Output_Length = 0);

@@ -76,7 +76,7 @@ package BinToAsc is
                           Output'Length / Output_Group_Size(C) >=
                             Input'Length / Input_Group_Size(C) + 1);
 
-   procedure Completed (C : in out Codec_To_Bin;
+   procedure Complete (C : in out Codec_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and

@@ -131,7 +131,7 @@ package body BinToAsc_Suite.Base85_Tests is
                                 Output_Length => Buffer_Used);
             Buffer_Index := Buffer_Index + Buffer_Used;
          end loop;
-         Z85_Decoder.Completed(Output => Buffer_Bin(Buffer_Index..Buffer_Bin'Last),
+         Z85_Decoder.Complete(Output => Buffer_Bin(Buffer_Index..Buffer_Bin'Last),
                               Output_Length => Buffer_Used);
          Buffer_Index := Buffer_Index + Buffer_Used;
          Assert(Buffer_Bin(1..Buffer_Index-1) = Z85_Test_Vector,
