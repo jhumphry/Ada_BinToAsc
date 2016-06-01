@@ -6,39 +6,44 @@
 generic
    Alphabet : Alphabet_16;
    Case_Sensitive : Boolean;
-package BinToAsc.Base16 is
+package BinToAsc.Base16
+with SPARK_Mode => On is
 
    type Base16_To_String is new Codec_To_String with null record;
 
    overriding
    procedure Reset (C : out Base16_To_String);
 
+   pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
    function Input_Group_Size (C : in Base16_To_String) return Positive is (1);
 
    overriding
    function Output_Group_Size (C : in Base16_To_String) return Positive is (2);
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Process (C : in out Base16_To_String;
                       Input : in Bin;
                       Output : out String;
-                      Output_Length : out Natural)
-     with Post => (Output_Length = 2);
+                      Output_Length : out Natural);
 
    overriding
    procedure Process (C : in out Base16_To_String;
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post => (Output_Length / 2 = Input'Length and
-                     Output_Length mod 2 = 0);
+     with Post => (C.State = Ready and
+                     Output'Length / Output_Group_Size(C) >=
+                       Input'Length / Input_Group_Size(C) + 1 and
+                       Output_Length mod 2 = 0);
 
    overriding
    procedure Complete (C : in out Base16_To_String;
                         Output : out String;
                         Output_Length : out Natural)
-     with Post => (Output_Length = 0 or Output_Length = 2);
+     with Post => (C.State in Completed | Failed and
+                     Output_Length in 0 | 2);
 
    function To_String (Input : in Bin_Array) return String;
 
@@ -47,33 +52,32 @@ package BinToAsc.Base16 is
    overriding
    procedure Reset (C : out Base16_To_Bin);
 
+   pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
    function Input_Group_Size (C : in Base16_To_Bin) return Positive is (2);
 
    overriding
    function Output_Group_Size (C : in Base16_To_Bin) return Positive is (1);
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Process (C : in out Base16_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
-                      Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length = 0 or Output_Length = 1);
+                      Output_Length : out Bin_Array_Index);
 
    overriding
    procedure Process (C : in out Base16_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
-                      Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length = Input'Length / 2 or
-                     Output_Length = Input'Length / 2 + 1 or
-                       C.State = Failed);
+                      Output_Length : out Bin_Array_Index);
 
    overriding
    procedure Complete (C : in out Base16_To_Bin;
                         Output : out Bin_Array;
                         Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length = 0);
+     with Post => (C.State in Completed | Failed and
+                     Output_Length = 0);
 
    function To_Bin (Input : in String) return Bin_Array;
 
