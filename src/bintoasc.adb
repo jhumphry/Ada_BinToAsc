@@ -1,11 +1,12 @@
 -- BinToAsc
 -- Binary data to ASCII codecs
 
--- Copyright (c) 2015, James Humphry - see LICENSE file for details
+-- Copyright (c) 2015 - 2016, James Humphry - see LICENSE file for details
 
 with Ada.Characters.Handling;
 
-package body BinToAsc is
+package body BinToAsc
+with SPARK_Mode => On is
 
    use Ada.Characters.Handling;
 
@@ -65,7 +66,9 @@ package body BinToAsc is
                             Case_Sensitive : in Boolean) return Boolean is
    begin
       for I in A'First + 1 ..A'Last loop
+         pragma Loop_Invariant (I > A'First and I <= A'Last);
          for J in A'First .. I - 1 loop
+            pragma Loop_Invariant (J >= A'First);
             if A(I) = A(J) or
               (not Case_Sensitive and To_Lower(A(I)) = To_Lower(A(J)))
             then

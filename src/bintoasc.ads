@@ -1,7 +1,7 @@
 -- BinToAsc
 -- Binary data to ASCII codecs
 
--- Copyright (c) 2015, James Humphry
+-- Copyright (c) 2015 - 2016, James Humphry
 --
 --  Permission to use, copy, modify, and/or distribute this software for any
 --  purpose with or without fee is hereby granted, provided that the above
@@ -19,7 +19,8 @@ generic
    type Bin is mod <>;
    type Bin_Array_Index is range <>;
    type Bin_Array is array (Bin_Array_Index range <>) of Bin;
-package BinToAsc is
+package BinToAsc
+with SPARK_Mode => On is
 
    type Codec_State is (Ready, Completed, Failed);
 
@@ -108,7 +109,7 @@ package BinToAsc is
 
    function Valid_Alphabet (A : in Alphabet;
                             Case_Sensitive : in Boolean) return Boolean
-     with Pre => (A'First = 0);
+     with Pre => (A'First < Alphabet_Index'Last);
 
    subtype Alphabet_16 is Alphabet(0..15);
    subtype Alphabet_32 is Alphabet(0..31);
@@ -126,7 +127,8 @@ private
    function Make_Reverse_Alphabet (A : in Alphabet;
                                    Case_Sensitive : in Boolean)
                                    return Reverse_Alphabet_Lookup
-     with Pre => (Valid_Alphabet(A, Case_Sensitive));
+     with Pre => (A'First < Alphabet_Index'Last and then
+                    Valid_Alphabet(A, Case_Sensitive));
 
    -- This compile-time check is useful for GNAT, but in GNATprove it currently
    -- just generates a warning that it can not yet be proved correct.
