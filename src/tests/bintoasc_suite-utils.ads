@@ -15,22 +15,26 @@ package BinToAsc_Suite.Utils is
       with package BToA is new BinToAsc(<>);
       type Codec_To_String is new BToA.Codec_To_String with private;
       type Codec_To_Bin is new BToA.Codec_To_Bin with private;
+      String_Group_Length, Bin_Group_Length : Positive;
    procedure Check_Symmetry (T : in out Test_Cases.Test_Case'Class);
 
    generic
       with package BToA is new BinToAsc(<>);
       type Codec_To_String is new BToA.Codec_To_String with private;
       type Codec_To_Bin is new BToA.Codec_To_Bin with private;
+      String_Group_Length, Bin_Group_Length : Positive;
    procedure Check_Length (T : in out Test_Cases.Test_Case'Class);
 
    generic
       Test_Vectors : Test_Vector_Array;
       type Codec_To_String is new RFC4648.BToA.Codec_To_String with private;
+      String_Group_Length, Bin_Group_Length : Positive;
    procedure Check_Test_Vectors_To_String (T : in out Test_Cases.Test_Case'Class);
 
    generic
       Test_Vectors : Test_Vector_Array;
       type Codec_To_Bin is new RFC4648.BToA.Codec_To_Bin with private;
+      String_Group_Length, Bin_Group_Length : Positive;
    procedure Check_Test_Vectors_To_Bin (T : in out Test_Cases.Test_Case'Class);
 
    generic

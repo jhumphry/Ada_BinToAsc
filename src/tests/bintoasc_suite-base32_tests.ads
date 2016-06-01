@@ -39,33 +39,47 @@ package BinToAsc_Suite.Base32_Tests is
    procedure Check_Symmetry is
      new BinToAsc_Suite.Utils.Check_Symmetry(BToA            => RFC4648.BToA,
                                              Codec_To_String => RFC4648.Base32.Base32_To_String,
-                                             Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin);
+                                             Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin,
+                                             String_Group_Length => 8,
+                                             Bin_Group_Length    => 5);
 
    procedure Check_Length is
      new BinToAsc_Suite.Utils.Check_Length(BToA            => RFC4648.BToA,
                                            Codec_To_String => RFC4648.Base32.Base32_To_String,
-                                           Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin);
+                                           Codec_To_Bin    => RFC4648.Base32.Base32_To_Bin,
+                                           String_Group_Length => 8,
+                                           Bin_Group_Length    => 5);
 
    procedure Check_Symmetry_Hex is
      new BinToAsc_Suite.Utils.Check_Symmetry(BToA            => RFC4648.BToA,
                                              Codec_To_String => RFC4648.Base32Hex.Base32_To_String,
-                                             Codec_To_Bin    => RFC4648.Base32Hex.Base32_To_Bin);
+                                             Codec_To_Bin    => RFC4648.Base32Hex.Base32_To_Bin,
+                                             String_Group_Length => 8,
+                                             Bin_Group_Length    => 5);
 
    procedure Check_Test_Vectors_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_String(Test_Vectors => Base32_Test_Vectors,
-                                                           Codec_To_String => RFC4648.Base32.Base32_To_String);
+                                                           Codec_To_String => RFC4648.Base32.Base32_To_String,
+                                                           String_Group_Length => 8,
+                                                           Bin_Group_Length    => 5);
 
-    procedure Check_Test_Vectors_To_String_Hex is
+   procedure Check_Test_Vectors_To_String_Hex is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_String(Test_Vectors => Base32Hex_Test_Vectors,
-                                                           Codec_To_String => RFC4648.Base32Hex.Base32_To_String);
+                                                           Codec_To_String => RFC4648.Base32Hex.Base32_To_String,
+                                                           String_Group_Length => 8,
+                                                           Bin_Group_Length    => 5);
 
    procedure Check_Test_Vectors_To_Bin is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_Bin(Test_Vectors => Base32_Test_Vectors,
-                                                        Codec_To_Bin => RFC4648.Base32.Base32_To_Bin);
+                                                        Codec_To_Bin => RFC4648.Base32.Base32_To_Bin,
+                                                        String_Group_Length => 8,
+                                                        Bin_Group_Length    => 5);
 
    procedure Check_Test_Vectors_To_Bin_Hex is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_Bin(Test_Vectors => Base32Hex_Test_Vectors,
-                                                        Codec_To_Bin => RFC4648.Base32Hex.Base32_To_Bin);
+                                                        Codec_To_Bin => RFC4648.Base32Hex.Base32_To_Bin,
+                                                        String_Group_Length => 8,
+                                                        Bin_Group_Length    => 5);
 
    procedure Check_Test_Vectors_Incremental_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_Incremental_To_String(Test_Vectors => Base32_Test_Vectors,

@@ -13,8 +13,8 @@ with SPARK_Mode => On is
    function To_String (Input : in Bin_Array) return String is
       C : Codec;
       Buffer_Length : constant Integer
-        := (Input'Length / Input_Group_Size(C) + 1)
-          * Output_Group_Size(C);
+        := (Input'Length / Input_Group_Size + 1)
+          * Output_Group_Size;
       Buffer : String(1 .. Buffer_Length);
       Result_Length : Integer;
       Tail_Length : Integer;
@@ -39,8 +39,8 @@ with SPARK_Mode => On is
    function To_Bin (Input : in String) return Bin_Array is
       C : Codec;
       Buffer_Length : constant Bin_Array_Index
-        := Bin_Array_Index((Input'Length / Input_Group_Size(C) + 1)
-                           * Output_Group_Size(C));
+        := Bin_Array_Index((Input'Length / Input_Group_Size + 1)
+                           * Output_Group_Size);
       Buffer : Bin_Array(1 .. Buffer_Length);
       Result_Length : Bin_Array_Index;
       Tail_Length : Bin_Array_Index;

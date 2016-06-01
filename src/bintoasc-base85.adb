@@ -110,7 +110,9 @@ package body BinToAsc.Base85 is
    end Complete;
 
    function To_String_Private is
-     new BinToAsc.To_String(Codec => Base85_To_String);
+     new BinToAsc.To_String(Codec => Base85_To_String,
+                            Input_Group_Size  => 4,
+                            Output_Group_Size => 5);
 
    function To_String (Input : in Bin_Array) return String
                        renames To_String_Private;
@@ -281,7 +283,9 @@ package body BinToAsc.Base85 is
       end if;
    end Complete;
 
-   function To_Bin_Private is new BinToAsc.To_Bin(Codec => Base85_To_Bin);
+   function To_Bin_Private is new BinToAsc.To_Bin(Codec => Base85_To_Bin,
+                            Input_Group_Size  => 5,
+                            Output_Group_Size => 4);
 
    function To_Bin (Input : in String) return Bin_Array renames To_Bin_Private;
 

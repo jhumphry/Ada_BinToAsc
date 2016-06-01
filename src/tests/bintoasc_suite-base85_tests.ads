@@ -23,12 +23,16 @@ package BinToAsc_Suite.Base85_Tests is
    procedure Check_Z85_Symmetry is
      new BinToAsc_Suite.Utils.Check_Symmetry(BToA            => ASCII85.BToA,
                                              Codec_To_String => ASCII85.Z85.Base85_To_String,
-                                             Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin);
+                                             Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin,
+                                             String_Group_Length => 5,
+                                             Bin_Group_Length    => 4);
 
    procedure Check_Z85_Length is
      new BinToAsc_Suite.Utils.Check_Length(BToA            => ASCII85.BToA,
                                            Codec_To_String => ASCII85.Z85.Base85_To_String,
-                                           Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin);
+                                           Codec_To_Bin    => ASCII85.Z85.Base85_To_Bin,
+                                           String_Group_Length => 5,
+                                           Bin_Group_Length    => 4);
 
    procedure Check_Z85_Test_Vector (T : in out Test_Cases.Test_Case'Class);
    procedure Check_Z85_Test_Vector_By_Char (T : in out Test_Cases.Test_Case'Class);

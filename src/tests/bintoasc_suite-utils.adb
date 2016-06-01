@@ -31,10 +31,14 @@ package body BinToAsc_Suite.Utils is
       use type BToA.Bin_Array_Index;
 
       function Bin_To_String is
-        new BToA.To_String(Codec => Codec_To_String);
+        new BToA.To_String(Codec => Codec_To_String,
+                           Input_Group_Size  => Bin_Group_Length,
+                           Output_Group_Size => String_Group_Length);
 
       function String_To_Bin is
-        new BToA.To_Bin(Codec => Codec_To_Bin);
+        new BToA.To_Bin(Codec => Codec_To_Bin,
+                        Input_Group_Size  => BToA.Bin_Array_Index(String_Group_Length),
+                        Output_Group_Size => BToA.Bin_Array_Index(Bin_Group_Length));
 
       Binary_Input : BToA.Bin_Array(0..255);
 
@@ -66,10 +70,14 @@ package body BinToAsc_Suite.Utils is
       use type BToA.Bin_Array_Index;
 
       function Bin_To_String is
-        new BToA.To_String(Codec => Codec_To_String);
+        new BToA.To_String(Codec => Codec_To_String,
+                           Input_Group_Size  => Bin_Group_Length,
+                           Output_Group_Size => String_Group_Length);
 
       function String_To_Bin is
-        new BToA.To_Bin(Codec => Codec_To_Bin);
+        new BToA.To_Bin(Codec => Codec_To_Bin,
+                        Input_Group_Size  => BToA.Bin_Array_Index(String_Group_Length),
+                        Output_Group_Size => BToA.Bin_Array_Index(Bin_Group_Length));
 
       All_One : constant BToA.Bin_Array(0..31) := (others => BToA.Bin'Last);
       All_Zero : constant BToA.Bin_Array(0..31) := (others => 0);
@@ -114,7 +122,9 @@ package body BinToAsc_Suite.Utils is
       pragma Unreferenced (T);
 
       function Bin_To_String is
-        new RFC4648.BToA.To_String(Codec => Codec_To_String);
+        new BToA.To_String(Codec => Codec_To_String,
+                           Input_Group_Size  => Bin_Group_Length,
+                           Output_Group_Size => String_Group_Length);
 
    begin
       for T of Test_Vectors loop
@@ -137,7 +147,9 @@ package body BinToAsc_Suite.Utils is
       pragma Unreferenced (T);
 
       function String_To_Bin is
-        new RFC4648.BToA.To_Bin(Codec => Codec_To_Bin);
+        new BToA.To_Bin(Codec => Codec_To_Bin,
+                        Input_Group_Size  => System.Storage_Elements.Storage_Offset(String_Group_Length),
+                        Output_Group_Size => System.Storage_Elements.Storage_Offset(Bin_Group_Length));
 
    begin
       for T of Test_Vectors loop

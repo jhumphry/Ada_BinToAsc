@@ -29,22 +29,30 @@ package BinToAsc_Suite.Base16_Tests is
    procedure Set_Up (T : in out Base16_Test);
 
    procedure Check_Symmetry is
-     new BinToAsc_Suite.Utils.Check_Symmetry(BToA            => RFC4648.BToA,
-                                             Codec_To_String => RFC4648.Base16.Base16_To_String,
-                                             Codec_To_Bin    => RFC4648.Base16.Base16_To_Bin);
+     new BinToAsc_Suite.Utils.Check_Symmetry(BToA                => RFC4648.BToA,
+                                             Codec_To_String     => RFC4648.Base16.Base16_To_String,
+                                             Codec_To_Bin        => RFC4648.Base16.Base16_To_Bin,
+                                             String_Group_Length => 2,
+                                             Bin_Group_Length    => 1);
 
    procedure Check_Length is
      new BinToAsc_Suite.Utils.Check_Length(BToA            => RFC4648.BToA,
                                            Codec_To_String => RFC4648.Base16.Base16_To_String,
-                                           Codec_To_Bin    => RFC4648.Base16.Base16_To_Bin);
+                                           Codec_To_Bin    => RFC4648.Base16.Base16_To_Bin,
+                                           String_Group_Length => 2,
+                                           Bin_Group_Length    => 1);
 
    procedure Check_Test_Vectors_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_String(Test_Vectors => Base16_Test_Vectors,
-                                                           Codec_To_String => RFC4648.Base16.Base16_To_String);
+                                                           Codec_To_String => RFC4648.Base16.Base16_To_String,
+                                                           String_Group_Length => 2,
+                                                           Bin_Group_Length    => 1);
 
    procedure Check_Test_Vectors_To_Bin is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_To_Bin(Test_Vectors => Base16_Test_Vectors,
-                                                        Codec_To_Bin => RFC4648.Base16.Base16_To_Bin);
+                                                        Codec_To_Bin => RFC4648.Base16.Base16_To_Bin,
+                                                        String_Group_Length => 2,
+                                                        Bin_Group_Length    => 1);
 
    procedure Check_Test_Vectors_Incremental_To_String is
      new BinToAsc_Suite.Utils.Check_Test_Vectors_Incremental_To_String(Test_Vectors => Base16_Test_Vectors,

@@ -94,13 +94,19 @@ with SPARK_Mode => On is
 
    generic
       type Codec is new Codec_To_String with private;
-   function To_String (Input : in Bin_Array) return String;
+      Input_Group_Size : Positive;
+      Output_Group_Size : Positive;
+   function To_String (Input : in Bin_Array) return String
+     with Pre => (Input'Length < ((Integer'Last/Output_Group_Size -  1) * Input_Group_Size));
 
    Invalid_Data_Encoding : exception;
 
    generic
       type Codec is new Codec_To_Bin with private;
-   function To_Bin (Input : in String) return Bin_Array;
+      Input_Group_Size : Bin_Array_Index;
+      Output_Group_Size : Bin_Array_Index;
+   function To_Bin (Input : in String) return Bin_Array
+     with Pre => (Input'Length / Input_Group_Size  < (Bin_Array_Index'Last/Output_Group_Size -  1));
 
    -- Define Alphabet types
 
