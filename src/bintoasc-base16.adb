@@ -46,14 +46,21 @@ package body BinToAsc.Base16 is
       Output_Index : Integer := Output'First;
       Input_Index : Bin;
    begin
+      pragma Assert (Output'Length >= 2 * Input'Length);
       Output_Length := 2 * Input'Length;
       for I in Input'Range loop
+         pragma Loop_Invariant (Output_Index = Output'First + Integer(I-Input'First) * 2);
          Input_Index := Bin'Pos(Input(I));
          Output(Output_Index) := Alphabet(Input_Index / 16);
          Output(Output_Index + 1) := Alphabet(Input_Index and 2#00001111#);
          Output_Index := Output_Index + 2;
       end loop;
+      pragma Assert ((Output_Index - Output'First) = Output_Length);
+      Output(Output_Index .. Output'Last) := (others => ' ');
    end Process;
+   pragma Annotate (GNATprove, False_Positive,
+                    """Output"" might not be initialized",
+                    "Output_Index from Output'First to Output_Index is filled, the rest is cleared");
 
    procedure Complete
      (C : in out Base16_To_String;
