@@ -23,7 +23,17 @@ project Ada_BinToAsc is
                               "ASCII85"
                              );
 
-   for Source_Dirs use ("src/");
+   Main_Source_Dir := ("src/");
+   Analysis_Source_Dir := "";
+
+   case Mode is
+      when "analyse" | "analyze" =>
+         Analysis_Source_Dir := "src/proof/";
+      when others =>
+         Analysis_Source_Dir := "";
+   end case;
+
+   for Source_Dirs use Main_Source_Dir & Analysis_Source_Dir;
    for Object_Dir use "build/";
    for Library_Dir use "lib/";
 
