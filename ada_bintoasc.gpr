@@ -1,9 +1,12 @@
 -- Ada_BinToAsc
 -- An Ada 2012 implementation of various binary-to-ASCII codecs
 
+-- Copyright (c) 2015 - 2016, James Humphry - see LICENSE file for details
+
 project Ada_BinToAsc is
 
-   type Mode_Type is ("debug", "optimize", "coverage");
+   type Mode_Type is ("debug", "analyse", "analyze",
+                      "coverage", "optimize", "optimise" );
    Mode : Mode_Type := external ("mode", "debug");
 
    for Languages use ("Ada");
@@ -37,6 +40,17 @@ project Ada_BinToAsc is
                                                 "-gnateA", "-gnateV", "-gnatVa",
                                                 "-gnatwa.f", "-gnatwZ",
                                                 "-gnatyaAbCdfhiknprux");
+
+         when "analyze" | "analyse" =>
+            for Default_Switches ("ada") use   ("-fstack-check", "-g", "-gnat2012",
+                                                "-gnata", "-gnatf", "-gnato",
+                                                "-gnateA", "-gnatVa",
+                                                "-gnatwa.f", "-gnatwZ",
+                                                "-gnatyaAbCdfhiknprux");
+
+            -- -gnateV is not compatible with SPARK, but parameter validity
+            -- should be provable instead.
+
          when "coverage" =>
             for Default_Switches ("ada") use   ("-fstack-check", "-g", "-gnat2012",
                                                 "-gnata", "-gnatf", "-gnato",
@@ -44,7 +58,8 @@ project Ada_BinToAsc is
                                                 "-gnatwa.f", "-gnatwZ",
                                                 "-ftest-coverage", "-fprofile-arcs",
                                                 "-gnatyaAbCdfhiknprux");
-         when "optimize" =>
+
+         when "optimize" | "optimise" =>
             for Default_Switches ("ada") use ("-gnat2012", "-O3", "-gnatn");
       end case;
    end Compiler;
