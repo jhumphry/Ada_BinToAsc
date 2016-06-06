@@ -10,6 +10,8 @@ package BinToAsc.Base64 is
 
    type Base64_To_String is new Codec_To_String with private;
 
+   overriding function Empty (C : in Base64_To_String) return Boolean;
+
    overriding
    procedure Reset (C : out Base64_To_String);
 
@@ -43,6 +45,8 @@ package BinToAsc.Base64 is
    function To_String (Input : in Bin_Array) return String;
 
    type Base64_To_Bin is new Codec_To_Bin with private;
+
+   overriding function Empty (C : in Base64_To_Bin) return Boolean;
 
    overriding
    procedure Reset (C : out Base64_To_Bin);
@@ -94,6 +98,9 @@ private
          Buffer : Base64_Bin_Buffer := (others => 0);
       end record;
 
+   overriding function Empty (C : in Base64_To_String) return Boolean
+   is (C.Next_Index = 0);
+
    type Base64_Reverse_Index is range 0..3;
    type Base64_Reverse_Buffer is array (Base64_Reverse_Index) of Bin;
 
@@ -103,5 +110,8 @@ private
          Buffer : Base64_Reverse_Buffer := (others => 0);
          Padding_Length : Bin_Array_Index := 0;
       end record;
+
+   overriding function Empty (C : in Base64_To_Bin) return Boolean
+   is (C.Next_Index = 0);
 
 end BinToAsc.Base64;

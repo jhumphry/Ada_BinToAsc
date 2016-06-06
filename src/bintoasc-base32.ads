@@ -12,6 +12,8 @@ package BinToAsc.Base32 is
 
    type Base32_To_String is new Codec_To_String with private;
 
+   overriding function Empty (C : in Base32_To_String) return Boolean;
+
    overriding
    procedure Reset (C : out Base32_To_String);
 
@@ -45,6 +47,8 @@ package BinToAsc.Base32 is
    function To_String (Input : in Bin_Array) return String;
 
    type Base32_To_Bin is new Codec_To_Bin with private;
+
+   overriding function Empty (C : in Base32_To_Bin) return Boolean;
 
    overriding
    procedure Reset (C : out Base32_To_Bin);
@@ -96,6 +100,9 @@ private
          Buffer : Base32_Bin_Buffer := (others => 0);
       end record;
 
+   overriding function Empty (C : in Base32_To_String) return Boolean
+   is (C.Next_Index = 0);
+
    type Base32_Reverse_Index is range 0..7;
    type Base32_Reverse_Buffer is array (Base32_Reverse_Index) of Bin;
 
@@ -105,5 +112,8 @@ private
          Buffer : Base32_Reverse_Buffer := (others => 0);
          Padding_Length : Bin_Array_Index := 0;
       end record;
+
+   overriding function Empty (C : in Base32_To_Bin) return Boolean
+   is (C.Next_Index = 0);
 
 end BinToAsc.Base32;

@@ -30,8 +30,10 @@ with SPARK_Mode => On is
       State : Codec_State := Ready;
    end record;
 
+   function Empty (C : in Codec) return Boolean is abstract;
+
    procedure Reset (C : out Codec) is abstract
-     with Post'Class => (C.State = Ready);
+     with Post'Class => (C.State = Ready and Empty(C));
    -- Reset a Codec to its initial state
 
    function Input_Group_Size (C : in Codec) return Positive is abstract;
@@ -46,7 +48,9 @@ with SPARK_Mode => On is
                       Output : out String;
                       Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
-                          Output'Length >= Output_Group_Size(C));
+                          Output'Length >= Output_Group_Size(C)),
+       Post'Class => (C.State in Ready | Failed and
+                        Output_Length <= Output_Group_Size(C));
 
    not overriding
    procedure Process (C : in out Codec_To_String;
@@ -55,7 +59,17 @@ with SPARK_Mode => On is
                       Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length / Output_Group_Size(C) >=
-                            Input'Length / Input_Group_Size(C) + 1);
+                            Input'Length / Input_Group_Size(C) + 1),
+       Post'Class => (C.State in Ready | Failed and
+                        (
+                         (Empty(C'Old) and
+                           Output_Length / Output_Group_Size(C) <=
+                           Input'Length / Input_Group_Size(C)
+                        ) or
+                           Output_Length / Output_Group_Size(C) <=
+                         (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                        )
+                     );
 
    not overriding
    procedure Complete (C : in out Codec_To_String;
@@ -63,7 +77,8 @@ with SPARK_Mode => On is
                         Output_Length : out Natural) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C)),
-       Post'Class => C.State in Completed | Failed;
+       Post'Class => (C.State in Completed | Failed and
+                     Output_Length <= Output_Group_Size(C));
 
    type Codec_To_Bin is abstract new Codec with null record;
 
@@ -73,7 +88,9 @@ with SPARK_Mode => On is
                       Output : out Bin_Array;
                       Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and
-                          Output'Length >= Output_Group_Size(C));
+                          Output'Length >= Output_Group_Size(C)),
+       Post'Class => (C.State in Ready | Failed and
+                        Output_Length <= Bin_Array_Index(Output_Group_Size(C)));
 
    not overriding
    procedure Process (C : in out Codec_To_Bin;
@@ -82,7 +99,18 @@ with SPARK_Mode => On is
                       Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length / Output_Group_Size(C) >=
-                            Input'Length / Input_Group_Size(C) + 1);
+                            Input'Length / Input_Group_Size(C) + 1),
+       Post'Class => (C.State in Ready | Failed and
+                        (
+                         (Empty(C'Old) and
+                           Integer(Output_Length) / Output_Group_Size(C) <=
+                           Input'Length / Input_Group_Size(C)
+                        ) or
+                           Integer(Output_Length) / Output_Group_Size(C) <=
+                         (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                        ) and
+                          Output_Length >=0
+                     );
 
    not overriding
    procedure Complete (C : in out Codec_To_Bin;
@@ -90,7 +118,8 @@ with SPARK_Mode => On is
                         Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length >= Output_Group_Size(C)),
-       Post'Class => C.State in Completed | Failed;
+       Post'Class => (C.State in Completed | Failed and
+                        Output_Length <= Bin_Array_Index(Output_Group_Size(C)));
 
    -- Helper functions
 

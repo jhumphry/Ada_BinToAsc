@@ -9,6 +9,8 @@ package BinToAsc.Base85 is
 
    type Base85_To_String is new Codec_To_String with private;
 
+   overriding function Empty (C : in Base85_To_String) return Boolean;
+
    overriding
    procedure Reset (C : out Base85_To_String);
 
@@ -42,6 +44,8 @@ package BinToAsc.Base85 is
    function To_String (Input : in Bin_Array) return String;
 
    type Base85_To_Bin is new Codec_To_Bin with private;
+
+   overriding function Empty (C : in Base85_To_Bin) return Boolean;
 
    overriding
    procedure Reset (C : out Base85_To_Bin);
@@ -87,6 +91,9 @@ private
          Buffer : Base85_Bin_Buffer := (others => 0);
       end record;
 
+   overriding function Empty (C : in Base85_To_String) return Boolean
+   is (C.Next_Index = 0);
+
    type Base85_Reverse_Index is range 0..4;
    type Base85_Reverse_Buffer is array (Base85_Reverse_Index) of Bin;
 
@@ -95,5 +102,8 @@ private
          Next_Index : Base85_Reverse_Index := 0;
          Buffer : Base85_Reverse_Buffer := (others => 0);
       end record;
+
+   overriding function Empty (C : in Base85_To_Bin) return Boolean
+   is (C.Next_Index = 0);
 
 end BinToAsc.Base85;

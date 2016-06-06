@@ -13,8 +13,11 @@ with SPARK_Mode => On is
 
    type Base16_To_String is new Codec_To_String with null record;
 
+   overriding function Empty (C : in Base16_To_String) return Boolean;
+
    overriding
-   procedure Reset (C : out Base16_To_String);
+   procedure Reset (C : out Base16_To_String)
+     with Post => (C.State = Ready and Empty(C));
 
    pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
@@ -51,8 +54,11 @@ with SPARK_Mode => On is
 
    type Base16_To_Bin is new Codec_To_Bin with private;
 
+   overriding function Empty (C : in Base16_To_Bin) return Boolean;
+
    overriding
-   procedure Reset (C : out Base16_To_Bin);
+   procedure Reset (C : out Base16_To_Bin)
+     with Post => (C.State = Ready and Empty(C));
 
    pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
@@ -85,6 +91,8 @@ with SPARK_Mode => On is
 
 private
 
+   overriding function Empty (C : in Base16_To_String) return Boolean is (True);
+
    subtype Half_Bin is Bin range 0..15;
 
    type Base16_To_Bin is new Codec_To_Bin with
@@ -92,5 +100,8 @@ private
          Loaded : Boolean := False;
          Load : Half_Bin := 0;
       end record;
+
+   overriding function Empty (C : in Base16_To_Bin) return Boolean
+   is (not C.Loaded);
 
 end BinToAsc_Proof.Base16;
