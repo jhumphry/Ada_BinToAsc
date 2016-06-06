@@ -7,7 +7,8 @@ with "ada_bintoasc";
 
 project Ada_BinToAsc_Tests is
 
-   type Mode_Type is ("debug", "optimize", "coverage");
+   type Mode_Type is ("debug", "analyse", "analyze",
+                      "coverage", "optimize", "optimise" );
    Mode : Mode_Type := external ("mode", "debug");
 
    for Source_Dirs use ("src/tests", "src/utils", "src/examples");
@@ -21,7 +22,8 @@ project Ada_BinToAsc_Tests is
    end Ide;
 
    -- Note: -gnateV would be a nice addition but it chokes on AUnit so has been
-   -- omitted for now
+   -- omitted for now. It's also not compatible with SPARK, but SPARK should
+   -- prove parameter validity anyway.
 
    Debug_Compiler_Switches := ("-fstack-check", "-g", "-gnat2012", "-gnata",
                                "-gnatf", "-gnato", "-gnateA", "-gnatVa",
@@ -33,13 +35,13 @@ project Ada_BinToAsc_Tests is
 
    package Compiler is
       case Mode is
-         when "debug" =>
+         when "debug" | "analyse" | "analyze" =>
             for Default_Switches ("ada") use
               Debug_Compiler_Switches;
          when "coverage" =>
             for Default_Switches ("ada") use
               Debug_Compiler_Switches & Coverage_Compiler_Switches;
-         when "optimize" =>
+         when "optimize" | "optimise" =>
             for Default_Switches ("ada") use
               Optimize_Compiler_Switches;
       end case;
@@ -49,7 +51,7 @@ project Ada_BinToAsc_Tests is
       case Mode is
          when "coverage" =>
             for Default_Switches ("ada") use ("-g", "-fprofile-generate");
-         when "debug" | "optimize" =>
+         when "debug" | "analyse" | "analyze" | "optimize" | "optimise" =>
             for Default_Switches ("ada") use ("");
       end case;
    end Linker;
