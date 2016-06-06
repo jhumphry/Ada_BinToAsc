@@ -36,10 +36,17 @@ with SPARK_Mode => On is
                       Input : in Bin_Array;
                       Output : out String;
                       Output_Length : out Natural)
-     with Post => (C.State = Ready and
-                     Output'Length / Output_Group_Size(C) >=
-                       Input'Length / Input_Group_Size(C) + 1 and
-                       Output_Length mod 2 = 0);
+     with Post => (C.State in Ready | Failed and
+                     (
+                      (Empty(C'Old) and
+                        Output_Length / Output_Group_Size(C) <=
+                        Input'Length / Input_Group_Size(C)
+                     ) or
+                        Output_Length / Output_Group_Size(C) <=
+                      (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                     ) and
+                       Output_Length mod 2 = 0
+                  );
 
    overriding
    procedure Complete (C : in out Base16_To_String;
