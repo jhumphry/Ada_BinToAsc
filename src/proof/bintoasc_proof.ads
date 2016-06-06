@@ -184,8 +184,13 @@ private
    function Make_Reverse_Alphabet (A : in Alphabet;
                                    Case_Sensitive : in Boolean)
                                    return Reverse_Alphabet_Lookup
-     with Pre => (A'First < Alphabet_Index'Last and then
-                    Valid_Alphabet(A, Case_Sensitive));
+     with Pre => (A'First = 0 and then
+                  A'Last > A'First and then
+                    Valid_Alphabet(A, Case_Sensitive)),
+     Post => (for all I in Make_Reverse_Alphabet'Result'Range =>
+                (Make_Reverse_Alphabet'Result(I) <= A'Last and
+                     Make_Reverse_Alphabet'Result(I) >= 0) or
+                  Make_Reverse_Alphabet'Result(I) = Invalid_Character_Input);
 
    -- This compile-time check is useful for GNAT, but in GNATprove it currently
    -- just generates a warning that it can not yet be proved correct.
