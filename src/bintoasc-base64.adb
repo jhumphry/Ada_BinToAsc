@@ -215,7 +215,8 @@ package body BinToAsc.Base64 is
          Output_Length := 0;
       else
          Output(Output_Index .. Output'Last) := (others => 0);
-         Output_Length := Output_Index - Output'First - C.Padding_Length;
+         Output_Length := Bin_Array_Index'Max(0, Output_Index - Output'First
+                                              - C.Padding_Length);
       end if;
 
    end Process;
