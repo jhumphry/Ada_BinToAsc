@@ -106,8 +106,8 @@ package body BinToAsc.Base16 is
          C.State := Failed;
       else
          if C.Loaded then
-            Output(Output'First) := Bin(C.Load) * 16 or Input_Bin;
-            Output(Output'First + 1 .. Output'Last) := (others => 0);
+            Output := (Bin(C.Load) * 16 or Input_Bin,
+                       others => 0);
             Output_Length := 1;
             C.Loaded := False;
          else
