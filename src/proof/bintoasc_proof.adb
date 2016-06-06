@@ -3,8 +3,6 @@
 
 -- Copyright (c) 2015 - 2016, James Humphry - see LICENSE file for details
 
-with Ada.Characters.Handling;
-
 package body BinToAsc_Proof
 with SPARK_Mode => On is
 
@@ -61,23 +59,6 @@ with SPARK_Mode => On is
       end if;
       return Buffer(1 .. Result_Length + Tail_Length);
    end To_Bin;
-
-   function Valid_Alphabet (A : in Alphabet;
-                            Case_Sensitive : in Boolean) return Boolean is
-   begin
-      for I in A'First + 1 ..A'Last loop
-         pragma Loop_Invariant (I > A'First and I <= A'Last);
-         for J in A'First .. I - 1 loop
-            pragma Loop_Invariant (J >= A'First);
-            if A(I) = A(J) or
-              (not Case_Sensitive and To_Lower(A(I)) = To_Lower(A(J)))
-            then
-               return False;
-            end if;
-         end loop;
-      end loop;
-      return True;
-   end Valid_Alphabet;
 
    function Make_Reverse_Alphabet (A : in Alphabet;
                               Case_Sensitive : Boolean)

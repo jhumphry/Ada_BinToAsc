@@ -15,6 +15,8 @@
 --  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 --  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+private with Ada.Characters.Handling;
+
 generic
    type Bin is mod <>;
    type Bin_Array_Index is range <>;
@@ -129,6 +131,18 @@ private
    Invalid_Character_Input : constant Bin := 255;
    -- Any useful BinToAsc codec cannot map all Bin values to a Character value
    -- else there would be no benefit over simply using the Bin data directly.
+
+   function Valid_Alphabet (A : in Alphabet;
+                            Case_Sensitive : in Boolean) return Boolean
+   is (for all X in A'First+1..A'Last =>
+         (for all Y in A'First..X-1 =>
+            (A(Y) /= A(X) and
+                 (Case_Sensitive or
+                      Ada.Characters.Handling.To_Lower(A(Y)) /=
+                    Ada.Characters.Handling.To_Lower(A(X)))
+            )
+         )
+      );
 
    function Make_Reverse_Alphabet (A : in Alphabet;
                                    Case_Sensitive : in Boolean)
