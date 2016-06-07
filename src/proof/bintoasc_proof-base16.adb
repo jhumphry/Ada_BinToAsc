@@ -103,6 +103,7 @@ with SPARK_Mode => On is
          Input_Bin := Reverse_Alphabet(Input);
 
       if Input_Bin = Invalid_Character_Input then
+         Output := (others => 0);
          Output_Length := 0;
          C.State := Failed;
       else
