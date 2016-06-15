@@ -81,6 +81,15 @@ with SPARK_Mode => On is
                R(To_Lower(A(I))) := I;
                R(To_Upper(A(I))) := I;
             end if;
+            pragma Loop_Invariant (for all J in A'First..I =>
+                                     (if Case_Sensitive
+                                      then R(A(J)) <= A'Last
+                                      else (
+                                        R(To_Lower(A(J))) <= A'Last and
+                                          R(To_Upper(A(J))) <= A'Last
+                                       )
+                                     )
+                                  );
          end loop;
       end return;
    end Make_Reverse_Alphabet;
