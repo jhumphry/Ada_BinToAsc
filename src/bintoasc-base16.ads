@@ -55,7 +55,8 @@ with SPARK_Mode => On is
      with Post => (C.State in Completed | Failed and
                      Output_Length in 0 | 2);
 
-   function To_String (Input : in Bin_Array) return String;
+   function To_String (Input : in Bin_Array) return String
+     with Pre => (Input'Length < ((Integer'Last/2 -  1) * 1));
 
    type Base16_To_Bin is new Codec_To_Bin with private;
 
@@ -92,7 +93,8 @@ with SPARK_Mode => On is
      with Post => (C.State in Completed | Failed and
                      Output_Length = 0);
 
-   function To_Bin (Input : in String) return Bin_Array;
+   function To_Bin (Input : in String) return Bin_Array
+     with Pre => (Input'Length / 2  < (Bin_Array_Index'Last/1 -  1));
 
 private
 
