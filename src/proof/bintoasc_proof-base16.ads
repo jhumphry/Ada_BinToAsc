@@ -13,7 +13,9 @@ with SPARK_Mode => On is
 
    type Base16_To_String is new Codec_To_String with null record;
 
+   pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding function Empty (C : in Base16_To_String) return Boolean;
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Reset (C : out Base16_To_String)
@@ -25,13 +27,14 @@ with SPARK_Mode => On is
 
    overriding
    function Output_Group_Size (C : in Base16_To_String) return Positive is (2);
-   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
+   pragma Warnings (GNATprove, Off, """C"" is not modified, could be IN");
    overriding
    procedure Process (C : in out Base16_To_String;
                       Input : in Bin;
                       Output : out String;
                       Output_Length : out Natural);
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Process (C : in out Base16_To_String;
@@ -49,13 +52,16 @@ with SPARK_Mode => On is
                      ) and
                        Output_Length mod 2 = 0
                   );
+    pragma Warnings (GNATprove, On, """C"" is not modified, could be IN");
 
+   pragma Warnings (GNATprove, Off, "unused initial value of ""C""");
    overriding
    procedure Complete (C : in out Base16_To_String;
                         Output : out String;
                         Output_Length : out Natural)
      with Post => (C.State in Completed | Failed and
                      Output_Length in 0 | 2);
+   pragma Warnings (GNATprove, On, "unused initial value of ""C""");
 
    function To_String (Input : in Bin_Array) return String
      with Pre => (Input'Length < ((Integer'Last/2 -  1) * 1));
