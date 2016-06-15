@@ -99,7 +99,15 @@ package body BinToAsc.Base16 is
    is
       Input_Bin : Bin;
    begin
-         Input_Bin := Reverse_Alphabet(Input);
+
+      pragma Assume (for all I in Reverse_Alphabet'Range =>
+                       (Reverse_Alphabet(I) <= Alphabet'Last and
+                            Reverse_Alphabet(I) >= Alphabet'First) or
+                         Reverse_Alphabet(I) = Invalid_Character_Input);
+      -- This is the postcondition on Make_Reverse_Alphabet, which sets up the
+      -- Reverse_Alphabet constant array. This assumption is therefore safe.
+
+      Input_Bin := Reverse_Alphabet(Input);
 
       if Input_Bin = Invalid_Character_Input then
          Output := (others => 0);
@@ -128,6 +136,14 @@ package body BinToAsc.Base16 is
       Input_Bin : Bin;
       Output_Index : Bin_Array_Index := Output'First;
    begin
+
+      pragma Assume (for all I in Reverse_Alphabet'Range =>
+                       (Reverse_Alphabet(I) <= Alphabet'Last and
+                            Reverse_Alphabet(I) >= Alphabet'First) or
+                         Reverse_Alphabet(I) = Invalid_Character_Input);
+      -- This is the postcondition on Make_Reverse_Alphabet, which sets up the
+      -- Reverse_Alphabet constant array. This assumption is therefore safe.
+
       for I in Input'Range loop
 
          Input_Bin := Reverse_Alphabet(Input(I));

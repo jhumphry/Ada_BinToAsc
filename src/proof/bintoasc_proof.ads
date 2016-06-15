@@ -189,7 +189,7 @@ private
                       Valid_Alphabet(A, Case_Sensitive)),
      Post => (for all I in Make_Reverse_Alphabet'Result'Range =>
                 (Make_Reverse_Alphabet'Result(I) <= A'Last and
-                     Make_Reverse_Alphabet'Result(I) >= 0) or
+                     Make_Reverse_Alphabet'Result(I) >= A'First) or
                   Make_Reverse_Alphabet'Result(I) = Invalid_Character_Input);
    pragma Annotate (GNATprove, False_Positive,
                     "postcondition might fail, cannot prove",
