@@ -17,34 +17,33 @@ package BinToAsc.Base32 is
    overriding
    procedure Reset (C : out Base32_To_String);
 
+   pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
    function Input_Group_Size (C : in Base32_To_String) return Positive is (5);
 
    overriding
    function Output_Group_Size (C : in Base32_To_String) return Positive is (8);
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Process (C : in out Base32_To_String;
                       Input : in Bin;
                       Output : out String;
-                      Output_Length : out Natural)
-     with Post => (Output_Length = 0 or Output_Length = 8);
+                      Output_Length : out Natural);
 
    overriding
    procedure Process (C : in out Base32_To_String;
                       Input : in Bin_Array;
                       Output : out String;
-                      Output_Length : out Natural)
-     with Post => (Output_Length / 8 = Input'Length / 5 or
-                     Output_Length / 8 = Input'Length / 5 + 1);
+                      Output_Length : out Natural);
 
    overriding
    procedure Complete (C : in out Base32_To_String;
                         Output : out String;
-                        Output_Length : out Natural)
-     with Post => (Output_Length = 0 or Output_Length = 8);
+                        Output_Length : out Natural);
 
-   function To_String (Input : in Bin_Array) return String;
+   function To_String (Input : in Bin_Array) return String
+     with Pre => (Input'Length < ((Integer'Last/8 -  1) * 5));
 
    type Base32_To_Bin is new Codec_To_Bin with private;
 
@@ -53,41 +52,34 @@ package BinToAsc.Base32 is
    overriding
    procedure Reset (C : out Base32_To_Bin);
 
+   pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
    function Input_Group_Size (C : in Base32_To_Bin) return Positive is (8);
 
    overriding
    function Output_Group_Size (C : in Base32_To_Bin) return Positive is (5);
+   pragma Warnings (GNATprove, On, "unused variable ""C""");
 
    overriding
    procedure Process (C : in out Base32_To_Bin;
                       Input : in Character;
                       Output : out Bin_Array;
-                      Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length >= 0 and Output_Length <= 5);
+                      Output_Length : out Bin_Array_Index);
 
    overriding
    procedure Process (C : in out Base32_To_Bin;
                       Input : in String;
                       Output : out Bin_Array;
-                      Output_Length : out Bin_Array_Index)
-     with Post => ((Output_Length / 5 >= Input'Length / 8 - 1 and
-                       Output_Length / 5 <= Input'Length / 8 + 1) or
-                         C.State = Failed);
-
-   -- Re: the postcondition. If the input is a given number of eight character
-   -- groups but with the last containing padding, the output may be less than
-   -- that number of five character groups. As usual, if the codec contained
-   -- some partially decoded data, the number of output groups can be one more
-   -- than otherwise expected.
+                      Output_Length : out Bin_Array_Index);
 
    overriding
    procedure Complete (C : in out Base32_To_Bin;
                         Output : out Bin_Array;
-                        Output_Length : out Bin_Array_Index)
-     with Post => (Output_Length = 0);
+                        Output_Length : out Bin_Array_Index);
 
-   function To_Bin (Input : in String) return Bin_Array;
+   function To_Bin (Input : in String) return Bin_Array
+     with Pre => (Input'Length / 8  < (Bin_Array_Index'Last/5 -  1) and
+                      Input'Last < Integer'Last);
 
 private
 

@@ -103,7 +103,11 @@ package body BinToAsc.Base32 is
          end if;
       end loop;
       Output_Length := Output_Index - Output'First;
+      Output(Output_Index .. Output'Last) := (others => ' ');
    end Process;
+   pragma Annotate (GNATprove, False_Positive,
+                    """Output"" might not be initialized",
+                    "Output_Index from Output'First to Output_Index is filled, the rest is cleared");
 
    procedure Complete
      (C : in out Base32_To_String;
@@ -210,42 +214,46 @@ package body BinToAsc.Base32 is
             -- No reason to ever have more than six padding characters in Base32
             -- input
             C.State := Failed;
+            Output := (others => 0);
+            Output_Length := 0;
+            return;
          end if;
       elsif C.Padding_Length > 0 then
          -- After the first padding character, only a second padding character
          -- can be valid
          C.State := Failed;
+         Output := (others => 0);
+         Output_Length := 0;
+         return;
       else
          Input_Bin := Reverse_Alphabet(Input);
          if Input_Bin = Invalid_Character_Input then
             C.State := Failed;
+            Output := (others => 0);
+            Output_Length := 0;
+            return;
          end if;
       end if;
 
-      if not (C.State = Failed) then
-         C.Buffer(C.Next_Index) := Input_Bin;
+      C.Buffer(C.Next_Index) := Input_Bin;
 
-         if C.Next_Index /= 7 then
-            Output := (others => 0);
-            Output_Length := 0;
-            C.Next_Index := C.Next_Index + 1;
-         elsif C.Padding_Length = 2 or C.Padding_Length = 5 then
-            Output := (others => 0);
-            Output_Length := 0;
-            C.State := Failed;
-         else
-            C.Next_Index := 0;
-            Output := ( C.Buffer(0) * 8 + C.Buffer(1) / 4,
-                        (C.Buffer(1) and 2#00011#) * 64 or C.Buffer(2) * 2 or C.Buffer(3) / 16,
-                        (C.Buffer(3) and 2#01111#) * 16 or C.Buffer(4) / 2,
-                        (C.Buffer(4) and 2#00001#) * 128 or C.Buffer(5) * 4 or C.Buffer(6) / 8,
-                        (C.Buffer(6) and 2#00111#) * 32 or C.Buffer(7),
-                        others => 0);
-            Output_Length := 5 - Padding_Characters_Effect(C.Padding_Length);
-         end if;
-      else
+      if C.Next_Index /= 7 then
          Output := (others => 0);
          Output_Length := 0;
+         C.Next_Index := C.Next_Index + 1;
+      elsif C.Padding_Length = 2 or C.Padding_Length = 5 then
+         Output := (others => 0);
+         Output_Length := 0;
+         C.State := Failed;
+      else
+         C.Next_Index := 0;
+         Output := ( C.Buffer(0) * 8 + C.Buffer(1) / 4,
+                     (C.Buffer(1) and 2#00011#) * 64 or C.Buffer(2) * 2 or C.Buffer(3) / 16,
+                     (C.Buffer(3) and 2#01111#) * 16 or C.Buffer(4) / 2,
+                     (C.Buffer(4) and 2#00001#) * 128 or C.Buffer(5) * 4 or C.Buffer(6) / 8,
+                     (C.Buffer(6) and 2#00111#) * 32 or C.Buffer(7),
+                     others => 0);
+         Output_Length := 5 - Padding_Characters_Effect(C.Padding_Length);
       end if;
    end Process;
 
@@ -310,6 +318,9 @@ package body BinToAsc.Base32 is
       end if;
 
    end Process;
+   pragma Annotate (GNATprove, False_Positive,
+                    """Output"" might not be initialized",
+                    "Output_Index from Output'First to Output_Index is filled, the rest is cleared");
 
    procedure Complete (C : in out Base32_To_Bin;
                         Output : out Bin_Array;
