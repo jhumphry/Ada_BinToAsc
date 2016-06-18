@@ -146,7 +146,8 @@ with SPARK_Mode => On is
       Input_Group_Size : Bin_Array_Index;
       Output_Group_Size : Bin_Array_Index;
    function To_Bin (Input : in String) return Bin_Array
-     with Pre => (Input'Length / Input_Group_Size  < (Bin_Array_Index'Last/Output_Group_Size -  1));
+     with Pre => (Input'Length / Input_Group_Size  < (Bin_Array_Index'Last/Output_Group_Size -  1) and
+                      Input'Last < Integer'Last);
 
    -- Define Alphabet types
 

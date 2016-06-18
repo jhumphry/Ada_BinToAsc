@@ -102,7 +102,8 @@ with SPARK_Mode => On is
                      Output_Length = 0);
 
    function To_Bin (Input : in String) return Bin_Array
-     with Pre => (Input'Length / 2  < (Bin_Array_Index'Last/1 -  1));
+     with Pre => (Input'Length / 2  < (Bin_Array_Index'Last/1 -  1) and
+                      Input'Last < Integer'Last);
 
 private
 
