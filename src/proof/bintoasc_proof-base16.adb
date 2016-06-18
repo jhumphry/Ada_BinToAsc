@@ -12,6 +12,9 @@ with SPARK_Mode => On is
 
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
      := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
+   pragma Annotate (GNATprove, Intentional,
+                    "precondition might fail",
+                    "It is part of the ""package precondition"" to supply valid alphabets.");
 
    --
    -- Base16_To_String
