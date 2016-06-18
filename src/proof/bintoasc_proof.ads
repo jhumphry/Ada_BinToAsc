@@ -68,16 +68,21 @@ with SPARK_Mode => On is
      with Pre'Class => (C.State = Ready and
                           Output'Length / Output_Group_Size(C) >=
                             Input'Length / Input_Group_Size(C) + 1),
-       Post'Class => (C.State in Ready | Failed and
-                        (
-                         (Empty(C'Old) and
-                           Output_Length / Output_Group_Size(C) <=
-                           Input'Length / Input_Group_Size(C)
-                        ) or
-                           Output_Length / Output_Group_Size(C) <=
-                         (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
-                        )
-                     );
+       Post'Class => ( (C.State = Failed or
+                         (
+                            C.State = Ready and
+                              (
+                                   (Empty(C'Old) and
+                                     Output_Length / Output_Group_Size(C) <=
+                                     Input'Length / Input_Group_Size(C)
+                              ) or
+                                     Output_Length / Output_Group_Size(C) <=
+                               (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                              )
+                         )
+                      ) and
+                         Output_Length >= 0
+                      );
 
    not overriding
    procedure Complete (C : in out Codec_To_String;
