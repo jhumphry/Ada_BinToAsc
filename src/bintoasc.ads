@@ -172,7 +172,7 @@ private
 
    type Reverse_Alphabet_Lookup is array (Character) of Bin;
 
-   Invalid_Character_Input : constant Bin := 255;
+   Invalid_Character_Input : constant Bin := Bin'Last;
    -- Any useful BinToAsc codec cannot map all Bin values to a Character value
    -- else there would be no benefit over simply using the Bin data directly.
 
