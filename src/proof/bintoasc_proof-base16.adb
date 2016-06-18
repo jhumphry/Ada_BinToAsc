@@ -139,6 +139,10 @@ with SPARK_Mode => On is
    is
       Input_Bin : Bin;
       Output_Index : Bin_Array_Index := Output'First;
+
+      Input_Processed : Integer := 0 with Ghost;
+      Output_Processed : Bin_Array_Index := 0 with Ghost;
+      -- These two variables are just to make the invariants clearer.
    begin
 
       pragma Assume (for all I in Reverse_Alphabet'Range =>
@@ -150,6 +154,21 @@ with SPARK_Mode => On is
 
       for I in Input'Range loop
 
+         pragma Loop_Invariant (Output_Index >= Output'First);
+
+         pragma Loop_Invariant (I - Input'First = Input_Processed);
+
+         pragma Loop_Invariant (Output_Index - Output'First = Output_Processed);
+
+         pragma Assume (
+                        Output_Processed = Bin_Array_Index((Input_Processed - 1) / 2)
+                        or
+                          Output_Processed = Bin_Array_Index(Input_Processed / 2)
+                       );
+         -- Tests (not shown) suggest that SPARK can prove that C.Loaded is
+         -- toggled on each pass through the loop. However I have not yet got
+         -- it to prove the arithmetic above, so I am forced to Assume it.
+
          Input_Bin := Reverse_Alphabet(Input(I));
 
          if Input_Bin = Invalid_Character_Input then
@@ -160,23 +179,40 @@ with SPARK_Mode => On is
          if C.Loaded then
             Output(Output_Index) := Bin(C.Load) * 16 or Input_Bin;
             Output_Index := Output_Index + 1;
+            Output_Processed := Output_Processed + 1;
             C.Loaded := False;
          else
             C.Loaded := True;
             C.Load := Input_Bin;
          end if;
 
+         Input_Processed := Input_Processed + 1;
       end loop;
+
+      pragma Assert (Output_Index >= Output'First);
 
       if C.State = Failed then
          Output := (others => 0);
          Output_Length := 0;
       else
+         C.State := Ready;
+         -- The above should not be necessary as the precondition requires
+         -- C.State to start as Ready and the only other assignment to C.State
+         -- is where C.State := Failed in the loop above. However, for some
+         -- reason the solvers don't seem to grasp that C.State can't end up
+         -- as Completed during this subprogram, so they complain that the
+         -- class-wide postcondition might not be met. This repetition seems
+         -- harmless and solves the problem.
+
          Output(Output_Index .. Output'Last) := (others => 0);
          Output_Length := Output_Index - Output'First;
       end if;
 
    end Process;
+
+   pragma Annotate (GNATprove, False_Positive,
+                    """Output"" might not be initialized",
+                    "Output_Index from Output'First to Output_Index is filled, the rest is cleared");
 
    procedure Complete (C : in out Base16_To_Bin;
                         Output : out Bin_Array;

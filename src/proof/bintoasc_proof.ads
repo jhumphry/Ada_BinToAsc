@@ -107,18 +107,27 @@ with SPARK_Mode => On is
                       Output_Length : out Bin_Array_Index) is abstract
      with Pre'Class => (C.State = Ready and
                           Output'Length / Output_Group_Size(C) >=
-                            Input'Length / Input_Group_Size(C) + 1),
-       Post'Class => (C.State in Ready | Failed and
-                        (
-                         (Empty(C'Old) and
-                           Integer(Output_Length) / Output_Group_Size(C) <=
-                           Input'Length / Input_Group_Size(C)
-                        ) or
-                           Integer(Output_Length) / Output_Group_Size(C) <=
-                         (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                            Input'Length / Input_Group_Size(C) + 1 and
+                            Output'Last < Bin_Array_Index'Last and
+                              Input'Length < Integer'Last),
+         Post'Class => ( (C.State = Failed or
+                           (
+                              C.State = Ready and
+                                (
+                                     (
+                                       Empty(C'Old) and
+                                       Integer(Output_Length) / Output_Group_Size(C) <=
+                                       Input'Length / Input_Group_Size(C)
+                                ) or
+                                   (
+                                          Integer(Output_Length) / Output_Group_Size(C) <=
+                                    (Input'Length + Input_Group_Size(C) - 1) / Input_Group_Size(C)
+                                   )
+                                )
+                           )
                         ) and
-                          Output_Length >=0
-                     );
+                           Output_Length >=0
+                        );
 
    not overriding
    procedure Complete (C : in out Codec_To_Bin;
