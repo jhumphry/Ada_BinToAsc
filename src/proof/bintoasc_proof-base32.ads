@@ -18,7 +18,8 @@ with SPARK_Mode => On is
    overriding function Empty (C : in Base32_To_String) return Boolean;
 
    overriding
-   procedure Reset (C : out Base32_To_String);
+   procedure Reset (C : out Base32_To_String)
+     with Post => (C.State = Ready and Empty(C));
 
    pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
@@ -53,7 +54,8 @@ with SPARK_Mode => On is
    overriding function Empty (C : in Base32_To_Bin) return Boolean;
 
    overriding
-   procedure Reset (C : out Base32_To_Bin);
+   procedure Reset (C : out Base32_To_Bin)
+     with Post => (C.State = Ready and Empty(C));
 
    pragma Warnings (GNATprove, Off, "unused variable ""C""");
    overriding
