@@ -221,16 +221,17 @@ with SPARK_Mode is
    begin
 
       if Input = Padding then
-         Input_Bin := 0;
-         C.Padding_Length := C.Padding_Length + 1;
-         if C.Padding_Length > 6 then
+         if C.Padding_Length > 5 then
             -- No reason to ever have more than six padding characters in Base32
-            -- input
+            -- input, so if we already have six we have failed.
             C.State := Failed;
             Output := (others => 0);
             Output_Length := 0;
             return;
+         else
+            C.Padding_Length := C.Padding_Length + 1;
          end if;
+         Input_Bin := 0;
       elsif C.Padding_Length > 0 then
          -- After the first padding character, only a second padding character
          -- can be valid
@@ -281,14 +282,15 @@ with SPARK_Mode is
       for I in Input'Range loop
 
          if Input(I) = Padding then
-            Input_Bin := 0;
-            C.Padding_Length := C.Padding_Length + 1;
-            if C.Padding_Length > 6 then
-               -- No reason to ever have more than six padding characters in
-               -- Base64 input
+            if C.Padding_Length > 5 then
+            -- No reason to ever have more than six padding characters in Base32
+            -- input, so if we already have six we have failed.
                C.State := Failed;
                exit;
+            else
+               C.Padding_Length := C.Padding_Length + 1;
             end if;
+            Input_Bin := 0;
          elsif C.Padding_Length > 0 then
             -- After the first padding character, only a second padding
             -- character can be valid
