@@ -9,31 +9,51 @@ package body BinToAsc.Base32 is
 
    use Ada.Characters.Handling;
 
-   function Make_Base32_Reverse_Alphabet return Reverse_Alphabet_Lookup is
+   function Make_Base32_Reverse_Alphabet (Alphabet : in Alphabet_32;
+                                          Case_Sensitive : in Boolean;
+                                          Allow_Homoglyphs : in Boolean)
+                                          return Reverse_Alphabet_Lookup
+     with Pre => (Alphabet'First = 0 and then
+                    Alphabet'Last > Alphabet'First and then
+                      Valid_Alphabet(Alphabet, Case_Sensitive)),
+     Post => (for all I in Make_Base32_Reverse_Alphabet'Result'Range =>
+                (Make_Base32_Reverse_Alphabet'Result(I) <= Alphabet'Last and
+                     Make_Base32_Reverse_Alphabet'Result(I) >= Alphabet'First) or
+                  Make_Base32_Reverse_Alphabet'Result(I) = Invalid_Character_Input);
+
+   function Make_Base32_Reverse_Alphabet (Alphabet : in Alphabet_32;
+                                          Case_Sensitive : in Boolean;
+                                          Allow_Homoglyphs : in Boolean)
+                                          return Reverse_Alphabet_Lookup is
+      R : Reverse_Alphabet_Lookup
+        := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
    begin
-      return R : Reverse_Alphabet_Lookup
-        := Make_Reverse_Alphabet(Alphabet, Case_Sensitive) do
-         if Allow_Homoglyphs then
-            if R('1') = Invalid_Character_Input then
-               if R('l') /= Invalid_Character_Input then
-                  R('1') := R('l');
-               elsif R('I') /= Invalid_Character_Input then
-                  R('1') := R('I');
-               end if;
-            end if;
-            if R('0') = Invalid_Character_Input then
-               if R('O') /= Invalid_Character_Input then
-                  R('0') := R('O');
-                elsif R('o') /= Invalid_Character_Input then
-                  R('0') := R('o');
-               end if;
+      if Allow_Homoglyphs then
+         if R('1') = Invalid_Character_Input then
+            if R('l') /= Invalid_Character_Input then
+               R('1') := R('l');
+            elsif R('I') /= Invalid_Character_Input then
+               R('1') := R('I');
             end if;
          end if;
-      end return;
+         if R('0') = Invalid_Character_Input then
+            if R('O') /= Invalid_Character_Input then
+               R('0') := R('O');
+            elsif R('o') /= Invalid_Character_Input then
+               R('0') := R('o');
+            end if;
+         end if;
+      end if;
+      return R;
    end Make_Base32_Reverse_Alphabet;
 
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
-     := Make_Base32_Reverse_Alphabet;
+     := Make_Base32_Reverse_Alphabet(Alphabet         => Alphabet,
+                                     Case_Sensitive   => Case_Sensitive,
+                                     Allow_Homoglyphs => Allow_Homoglyphs);
+   pragma Annotate (GNATprove, Intentional,
+                    "precondition might fail",
+                    "It is part of the ""package precondition"" to supply valid alphabets.");
 
    --
    -- Base32_To_String
