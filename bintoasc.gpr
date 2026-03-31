@@ -1,9 +1,9 @@
--- Ada_BinToAsc
+-- BinToAsc
 -- An Ada 2012 implementation of various binary-to-ASCII codecs
 
 -- Copyright (c) 2015 - 2016, James Humphry - see LICENSE file for details
 
-project Ada_BinToAsc is
+project BinToAsc is
 
    type Mode_Type is ("debug", "analyse", "analyze",
                       "coverage", "optimize", "optimise" );
@@ -11,7 +11,7 @@ project Ada_BinToAsc is
 
    for Languages use ("Ada");
 
-   for Library_Name use "ada_bintoasc";
+   for Library_Name use "bintoasc";
    for Library_Kind use "static";
 
    for Library_Interface use ("BinToAsc",
@@ -74,4 +74,4 @@ project Ada_BinToAsc is
       end case;
    end Compiler;
 
-end Ada_BinToAsc;
+end BinToAsc;

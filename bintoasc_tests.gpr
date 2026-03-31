@@ -1,11 +1,11 @@
--- Ada_BinToAsc
+-- BinToAsc
 -- Unit tests and example usage for an Ada 2012 implementation of
 -- various binary-to-ASCII codecs
 
 with "aunit";
-with "ada_bintoasc";
+with "bintoasc";
 
-project Ada_BinToAsc_Tests is
+project BinToAsc_Tests is
 
    type Mode_Type is ("debug", "analyse", "analyze",
                       "coverage", "optimize", "optimise" );
@@ -56,4 +56,4 @@ project Ada_BinToAsc_Tests is
       end case;
    end Linker;
 
-end Ada_BinToAsc_Tests;
+end BinToAsc_Tests;

@@ -1,4 +1,4 @@
-# Ada_BinToAsc
+# BinToAsc
 
 ## Introduction
 
@@ -84,12 +84,12 @@ and is fully reversible.
 
 ## Build process and tests
 
-Three `gprbuild` project files are included. `ada_bintoasc.gpr`
+Three `gprbuild` project files are included. `bintoasc.gpr`
 compiles the library and takes a `mode` option that can be `debug`,
-`optimize` or `coverage`. The `ada_bintoasc_external.gpr` file can be
+`optimize` or `coverage`. The `bintoasc_external.gpr` file can be
 used instead if you want to prevent recompilation of the library.
 
-The `ada_bintoasc_tests.gpr` compiles `bintoasc_example` which
+The `bintoasc_tests.gpr` compiles `bintoasc_example` which
 demonstrates simple usage of the library and `bintoasc_tests` which
 runs a series of unit tests. The unit tests have complete coverage of
 the library with the exception of the error path in `To_String` which
