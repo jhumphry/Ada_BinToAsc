@@ -3,11 +3,7 @@
 
 -- Copyright (c) 2015-2026, James Humphry - see LICENSE file for details
 
-with Ada.Characters.Handling;
-
 package body BinToAsc.Base32 is
-
-   use Ada.Characters.Handling;
 
    function Make_Base32_Reverse_Alphabet (Alphabet : in Alphabet_32;
                                           Case_Sensitive : in Boolean;

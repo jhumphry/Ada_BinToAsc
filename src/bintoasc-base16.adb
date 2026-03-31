@@ -3,11 +3,7 @@
 
 -- Copyright (c) 2015-2026, James Humphry - see LICENSE file for details
 
-with Ada.Characters.Handling;
-
 package body BinToAsc.Base16 is
-
-   use Ada.Characters.Handling;
 
    Reverse_Alphabet : constant Reverse_Alphabet_Lookup
      := Make_Reverse_Alphabet(Alphabet, Case_Sensitive);
