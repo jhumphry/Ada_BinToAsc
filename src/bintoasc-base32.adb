@@ -1,7 +1,7 @@
 -- BinToAsc.Base32
 -- Binary data to ASCII codecs - Base64 codec as in RFC4648
 
--- Copyright (c) 2015, James Humphry - see LICENSE file for details
+-- Copyright (c) 2015-2026, James Humphry - see LICENSE file for details
 
 with Ada.Characters.Handling;
 
@@ -366,21 +366,13 @@ package body BinToAsc.Base32 is
 
 begin
 
-   -- The following Compile_Time_Error test is silently ignored by GNAT GPL 2015,
-   -- although it does appear to be a static boolean expression as required by
-   -- the user guide. It works if converted to a run-time test so it has been
-   -- left in, in the hope that in a future version of GNAT it will actually be
-   -- tested.
-   pragma Warnings (GNATprove, Off, "Compile_Time_Error");
-   pragma Compile_Time_Error ((for some X in 1..Alphabet'Last =>
-                                 (for some Y in 0..X-1 =>
-                                    (Alphabet(Y) = Alphabet(X) or
-                                         (not Case_Sensitive and
-                                              To_Lower(Alphabet(Y)) = To_Lower(Alphabet(X)))
-                                    )
-                                 )
-                               ),
-                              "Duplicate letter in alphabet for Base32 codec.");
-   pragma Warnings (GNATprove, On, "Compile_Time_Error");
+   pragma Warnings (GNATprove, Off, "Assert");
+   pragma Assert (not (for some X in 1..Alphabet'Last =>
+                   (for some Y in 0..X-1 =>
+                    Alphabet(Y) = Alphabet(X)
+                   )
+                  ),
+                  "Duplicate letter in alphabet for Base32 codec.");
+   pragma Warnings (GNATprove, On, "Assert");
 
 end BinToAsc.Base32;

@@ -1,7 +1,7 @@
 -- BinToAsc.Base32
 -- Binary data to ASCII codecs - Base64 codec as in RFC4648
 
--- Copyright (c) 2015, James Humphry - see LICENSE file for details
+-- Copyright (c) 2015-2026, James Humphry - see LICENSE file for details
 
 with Ada.Characters.Handling;
 
@@ -103,10 +103,23 @@ with SPARK_Mode is
       Output_Length : out Natural)
    is
       Output_Index : Integer := Output'First;
+
+      Input_Processed : Bin_Array_Index
+        := Bin_Array_Index(C.Next_Index) with Ghost;
+      Output_Processed : Integer := 0 with Ghost;
+      -- These two variables are just to make the invariants clearer.
    begin
       for I in Input'Range loop
-         pragma Loop_Invariant (Output_Index = Output'First + (Integer(I-Input'First) / 5) * 8);
+
+         pragma Loop_Invariant (I - Input'First + Input_Processed'Loop_Entry = Input_Processed);
+
+         pragma Loop_Invariant (Output_Index - Output'First = Output_Processed);
+
+         pragma Assume (Integer(Input_Processed) / 5 = Output_Processed / 8);
+
          C.Buffer(C.Next_Index) := Input(I);
+         Input_Processed := Input_Processed + 1;
+
          if C.Next_Index /= 4 then
             C.Next_Index := C.Next_Index + 1;
          else
@@ -122,6 +135,7 @@ with SPARK_Mode is
                 Alphabet(C.Buffer(4) and 2#00011111#)
                );
             Output_Index := Output_Index + 8;
+            Output_Processed := Output_Processed + 8;
          end if;
       end loop;
       Output_Length := Output_Index - Output'First;
@@ -368,21 +382,13 @@ with SPARK_Mode is
 
 begin
 
-   -- The following Compile_Time_Error test is silently ignored by GNAT GPL 2015,
-   -- although it does appear to be a static boolean expression as required by
-   -- the user guide. It works if converted to a run-time test so it has been
-   -- left in, in the hope that in a future version of GNAT it will actually be
-   -- tested.
-   pragma Warnings (GNATprove, Off, "Compile_Time_Error");
-   pragma Compile_Time_Error ((for some X in 1..Alphabet'Last =>
-                                 (for some Y in 0..X-1 =>
-                                    (Alphabet(Y) = Alphabet(X) or
-                                         (not Case_Sensitive and
-                                              To_Lower(Alphabet(Y)) = To_Lower(Alphabet(X)))
-                                    )
-                                 )
-                               ),
-                              "Duplicate letter in alphabet for Base32 codec.");
-   pragma Warnings (GNATprove, On, "Compile_Time_Error");
+   pragma Warnings (GNATprove, Off, "Assert");
+   pragma Assert (not (for some X in 1..Alphabet'Last =>
+                   (for some Y in 0..X-1 =>
+                    Alphabet(Y) = Alphabet(X)
+                   )
+                  ),
+                  "Duplicate letter in alphabet for Base32 codec.");
+   pragma Warnings (GNATprove, On, "Assert");
 
 end BinToAsc_Proof.Base32;
