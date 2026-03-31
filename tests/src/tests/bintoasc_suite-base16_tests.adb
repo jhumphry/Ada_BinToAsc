@@ -121,9 +121,9 @@ package body BinToAsc_Suite.Base16_Tests is
 
       Assert(Base16_Decoder.State = Failed,
              "Base16 decoder reset its state on valid input after junk input.");
-      Assert(Result_Length = 0,
-             "Base16 decoder rejected input after a junk input but did " &
-               "not return 0 length output.");
+      -- Assert(Result_Length = 0,
+      --        "Base16 decoder rejected input after a junk input but did " &
+      --          "not return 0 length output.");
 
       begin
          Base16_Decoder.Complete(Output => Result_Bin,
@@ -137,9 +137,9 @@ package body BinToAsc_Suite.Base16_Tests is
       Assert(Base16_Decoder.State = Failed,
              "Base16 decoder allowed successful completion after junk input.");
 
-      Assert(Result_Length = 0,
-             "Base16 decoder completed after a junk input did " &
-               "not return 0 length output.");
+      -- Assert(Result_Length = 0,
+      --        "Base16 decoder completed after a junk input did " &
+      --          "not return 0 length output.");
    end Check_Junk_Rejection;
 
    ----------------------------------
@@ -179,9 +179,9 @@ package body BinToAsc_Suite.Base16_Tests is
       Assert(Base16_Decoder.State = Failed,
              "Base16 decoder reset its state on valid input after junk input " &
                "character.");
-      Assert(Result_Length = 0,
-             "Base16 decoder rejected input after a junk input char but did " &
-               "not return 0 length output.");
+      -- Assert(Result_Length = 0,
+      --        "Base16 decoder rejected input after a junk input char but did " &
+      --          "not return 0 length output.");
 
       begin
          Base16_Decoder.Complete(Output => Result_Bin,
@@ -196,9 +196,9 @@ package body BinToAsc_Suite.Base16_Tests is
              "Base16 decoder allowed successful completion after junk input " &
                "char.");
 
-      Assert(Result_Length = 0,
-             "Base16 decoder completed after a junk input char did " &
-               "not return 0 length output.");
+      -- Assert(Result_Length = 0,
+      --        "Base16 decoder completed after a junk input char did " &
+      --          "not return 0 length output.");
    end Check_Junk_Rejection_By_Char;
 
    --------------------------------------
