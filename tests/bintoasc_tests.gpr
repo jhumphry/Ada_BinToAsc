@@ -3,7 +3,7 @@
 -- various binary-to-ASCII codecs
 
 with "aunit";
-with "bintoasc";
+with "../bintoasc";
 
 project BinToAsc_Tests is
 
@@ -11,7 +11,7 @@ project BinToAsc_Tests is
                       "coverage", "optimize", "optimise" );
    Mode : Mode_Type := external ("mode", "debug");
 
-   for Source_Dirs use ("src/tests", "src/utils", "src/examples");
+   for Source_Dirs use ("src/", "src/tests", "src/examples", "src/utils");
    for Object_Dir use "build/";
    for Exec_Dir use "exec/";
    for Main use ("bintoasc_example.adb", "bintoasc_tests.adb");
