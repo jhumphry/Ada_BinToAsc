@@ -1,0 +1,16 @@
+name = "bintoasc_tests"
+description = "Tests for bintoasc crate"
+version = "0.1.0-dev"
+
+authors = ["James Humphry"]
+maintainers = ["James Humphry <alire@binecho.co.uk>"]
+maintainers-logins = ["jhumphry"]
+licenses = "ISC"
+website = ""
+tags = ["base64", "base32", "base16", "base85", "rfc4648"]
+
+executables = ["bintoasc_tests", "bintoasc_example"]
+
+[[depends-on]]
+my_crate = "*"              # Any version of the main crate
+aunit = "*"                 # Dependency for testing only

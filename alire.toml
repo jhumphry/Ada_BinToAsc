@@ -1,0 +1,10 @@
+name = "bintoasc"
+description = "Implement various binary-to-ASCII codecs such as Base 64."
+version = "0.1.0-dev"
+
+authors = ["James Humphry"]
+maintainers = ["James Humphry <alire@binecho.co.uk>"]
+maintainers-logins = ["jhumphry"]
+licenses = "ISC"
+website = ""
+tags = ["base64", "base32", "base16", "base85", "rfc4648"]
